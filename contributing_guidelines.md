@@ -5,8 +5,8 @@
 
 ## Organisation
 
-Issues and worktime will be tracked by Jira.
-If you want to contribute to the project send an email to one of the projectmanagers.
+Issues and work time will be tracked by Jira.
+If you want to contribute to the project send an email to one of the project managers.
 
 ## How to get started
 
@@ -14,8 +14,8 @@ If you want to contribute to the project send an email to one of the projectmana
 
 ## Timetracking
 
-The amount of work put into this project is to be documented. For that purpose there is a timesheet on the Jira portal.
-The amount of time per worksegment is not to be more then 4 hours. Everything longer should be split into smaller segments.
+The amount of work put into this project is to be documented. For that purpose there is a time sheet on the Jira portal.
+The amount of time per work segment is not to be more then 4 hours. Everything longer should be split into smaller segments.
 
 ## Issues
 
@@ -36,8 +36,9 @@ If an issue is implementing a feature it should always be connected to its epic.
 ### Styleguide
 
 **Titel:**
+
 The title of the Issue should always be **short but descriptive**.
-It should always tell everyone clearly what the core idea of this issue is by following a simple grammar and the **imperative mood in the present tense.** A contributer without code knowledge should be able to read the **title** of the issue, detail can follow in the description.
+It should always tell everyone clearly what the core idea of this issue is by following a simple grammar and the **imperative mood in the present tense.** A contributer without code knowledge should be able to read the **title** of the issue, details can follow in the description.
 
  Examples:
 
@@ -57,10 +58,38 @@ It should always tell everyone clearly what the core idea of this issue is by fo
 ```
 
 **Description:**
-In the description of the issue describe the **feature** in more detail. Name specific tools and methods on how the feature is planned to be implemented. Pictures of mockups and graphs are good tools to make the issue more detailed.
+
+In the description of the issue describe the **feature** in more detail. Name specific tools and methods on how the feature is planned to be implemented. Pictures of mock ups and graphs are good tools to make the issue more detailed.
 If the issue is tracking a **bug** it should have a description on how to reproduce the bug, if possible. Screenshots, logs, error messages and potential fixes are encouraged as well.
 
+## Branches
 
-## Tags
+Branches should follow the style of:
 
-TODO
+~~~txt
+feature/<NAME>
+docu/<NAME>
+fix/<NAME>
+release/<NAME>
+misc/<NAME>
+~~~
+
+### Merge requests
+
+Merge requests should always be approved by at least another person in the project.
+
+## Commits
+
+Commits should follow a similar style as Issues but in the past tense. 
+
+Examples:
+
+~~~txt
+"Added Submit button on comments"
+"Rezized header font"
+"Fixed login form"
+~~~
+
+## Lables
+
+Always select lables for the issue you are creating. 
