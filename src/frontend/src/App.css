@@ -1,0 +1,53 @@
+.exame{
+    width: 100%
+}
+.column{
+    float: left;
+    width: 50%;
+	height: 100vh;
+	overflow: auto;
+}
+.imageArea{
+	position: relative;
+}
+.rectangle{
+	border: 1px solid #8C160E;
+	position: absolute;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.task{
+    margin: 2%;
+    padding: 5px;
+    background-color: #eee;
+    border-left: 6px solid #00458b;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.task>div{
+	margin:.5rem;
+}
+
+.buttons{
+	display: flex;
+	flex-direction: column;
+}
+
+.taskform{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+
+label{
+	color: #00458b;
+}
+
+.taskform div{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	margin-right: 1rem;
+}
