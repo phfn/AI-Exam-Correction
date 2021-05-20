@@ -1,4 +1,4 @@
-import Task
+from interfaces import Task
 from typing import List
 
 class Document:
@@ -10,7 +10,6 @@ class Document:
         self.tasks = tasks
         
         
-    # TODO adding check for unique id
     def add_task(self, task : Task):
         self.tasks.append(task)
 
@@ -29,10 +28,4 @@ class Document:
 
                 else: task.actual_points = task.max_points
                 break
-
-
-    
-    #TODO
-    def sort_tasks_by_pos(self):
-        pass
 

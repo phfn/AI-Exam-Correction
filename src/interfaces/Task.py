@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import enum 
-import task_types 
+from interfaces import task_types 
 
 class Point:
 
