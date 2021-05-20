@@ -1,6 +1,5 @@
 import cv2 as cv
 import itertools
-import interfaceClass as ic
 
 
 '''
@@ -80,7 +79,7 @@ def find_checkboxes(picture, margin=26):
     checkboxes = []
     
     for i in range(len(contours)):
-        color = (0,255,0)
+        color = (0,0,255)
         myvar1 = cv.arcLength(contours[i], True)
         approx = cv.approxPolyDP(contours[i], 0.02 * myvar1, True)
         (x,y,w,h) = cv.boundingRect(approx)
@@ -89,10 +88,13 @@ def find_checkboxes(picture, margin=26):
             checkboxes.append([x,y,x+w,y+h])
         
     checkboxes = __checkbox_checker(checkboxes)
+    checkboxes = sortCheckboxes(checkboxes)
     i=1
     for box in checkboxes:
         cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), (0,0,255),2)    
-        cv.putText(drawing, str(i), (box[0], box[1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.9, (0,0,255), 2)
+        cv.putText(drawing, str(i), (box[0], box[1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+        b = countCheckboxPixels(box, drawing)
+        cv.putText(drawing, str(b), (box[0]-int(margin), box[1]+int(margin)), cv.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
         i += 1
     return checkboxes, drawing
 
@@ -116,4 +118,8 @@ def countCheckboxPixels(checkbox, img):
         return 'x'
     else:
         return 'm'
+
+
+def sortCheckboxes(boxes):
+    return sorted(boxes, key=lambda box: [box[1], box[0]])
     
