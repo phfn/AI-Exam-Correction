@@ -1,26 +1,23 @@
-#!/usr/bin/env python3
+from dataclasses import dataclass
 
-import enum 
-from interfaces import task_types 
+from .task_types import Task_type
 
-class Point:
-
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
+@dataclass
 class Task:
-
     """Object that describes tasks contained in a document"""
+    x: int
+    y: int
+    width: int
+    height: int
+    task_type: Task_type
+    expected_answer: str
+    max_points: float
+    deduction_per_error: float = 0
+    correct_answer: str = ""
+    points: float = 0
 
-    def __init__(self, number, x, y, width, height, task_type : task_types, expected_answer, max_points, deduction_per_error):
-        self.number = number        # Unique ID of task, should represent pos in doc
-        self.pos = Point(x, y)      # Position
-        self.width = width          
-        self.height = height
-        self.task_type = task_type  # Type of task, see task_types class for options
-        self.expected_answer = expected_answer
-        self.actual_answer = ""
-        self.max_points = max_points
-        self.actual_points = 0 
-        self.deduction_per_error = 0
+
+    def set_points(self, points:float):
+        if points > self.max_points:
+            points = self.max_points
+        self.points = points

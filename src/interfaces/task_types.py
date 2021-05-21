@@ -3,9 +3,9 @@ import enum
 
 class Task_type(enum.Enum):
 
-    single_choice = 0
-    multiple_choice = 1
-    number = 2
-    text = 3
-    text_no_numbers = 4
-    shape = 5
+    SINGLE_CHOICE = 0
+    MULTIPLE_CHOICE = 1
+    NUMBER = 2
+    TEXT = 3
+    TEXT_NO_NUMBERS = 4
+    SHAPE = 5

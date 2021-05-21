@@ -1,31 +1,18 @@
-from interfaces import Task
+from dataclasses import dataclass, field
 from typing import List
 
+from PIL import Image
+
+from .Task import Task
+from .task_types import Task_type
+
+
+@dataclass()
 class Document:
+    img: Image = field(compare=False)
+    tasks: List[Task] = field(default_factory=list, compare=True)
+    img_modified: Image = field(default=None, compare=False, init=False)
 
-    def __init__(self, document, tasks : List[Task]):
-        
-        self.clean_document = document # Do not edit
-        self.preview_document = document # Document to edit for preview user
-        self.tasks = tasks
-        
-        
-    def add_task(self, task : Task):
-        self.tasks.append(task)
-
-    def append_task(self, task : Task):
-        task.number = self.tasks[-0] + 1
-        self.tasks.append(task)
-
-
-
-    def set_points(self, task_number, points):
-        for task in self.tasks: 
-
-            if task.number == task_number:
-                if task.max_points >= points:
-                    task.actual_points = points
-
-                else: task.actual_points = task.max_points
-                break
+    def __post_init__(self):
+        self.img_modified=self.img
 
