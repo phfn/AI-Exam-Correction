@@ -13,7 +13,7 @@ class Task:
     expected_answer: str
     max_points: float
     deduction_per_error: float = 0
-    correct_answer: str = ""
+    actual_answer: str = ""
     points: float = 0
 
 
