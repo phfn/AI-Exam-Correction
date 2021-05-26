@@ -117,7 +117,8 @@ function App() {
 
 							}
 						}),
-						img: image
+						img: image,
+						documentsToCheck: document.getElementById("docsToCorrect").files
 					}
 				)
 			})
@@ -155,6 +156,8 @@ function App() {
 
 				<button onClick={() => AddOnClick()} disabled={!IsAddEnabled()}>Add</button>
 				<Tasks tasks={taskList.tasks} setTasks={setTasks} load={load} del={del} save={saveCropInExistingTask} editing={editing} setEditing={setEditing}/>
+				Select documents to correct
+				<input type="file" id="docsToCorrect" multiple="multiple"></input>
 				{taskList.tasks.length>0 && <div><button onClick={sendToBackend} >Submit</button><pre>{submitText}</pre></div>}
             </div>
 
