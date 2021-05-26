@@ -1,8 +1,9 @@
 
 # Adding paths of custom packages
 import sys
-sys.path.insert(0, '../../interfaces')
+sys.path.append('../../interfaces', '../preprocessing/')
 
+from ocr-interface import check_document
 from flask import Flask, request
 import json
 import Document
