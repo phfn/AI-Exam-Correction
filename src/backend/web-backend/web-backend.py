@@ -1,5 +1,13 @@
+
+# Adding paths of custom packages
+import sys
+sys.path.insert(0, '../../interfaces')
+
 from flask import Flask, request
 import json
+import Document
+
+
 
 app = Flask(__name__)
 
