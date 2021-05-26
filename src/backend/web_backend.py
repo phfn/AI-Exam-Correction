@@ -1,12 +1,14 @@
 import io
 import json
-from base64 import b64decode
+from io import BytesIO
+from pdf2image import convert_from_bytes
+from base64 import b64decode, b64encode
 
 from flask import Flask, request
 from PIL import Image
 
-from interfaces.Document import Document
-from interfaces.Task import Task
+from Document import Document
+from Task import Task
 
 app = Flask(__name__)
 
