@@ -58,13 +58,42 @@ function App() {
     let IsAddEnabled = () => {
 		return crop.width>0&&crop.height>0&&!editing
 	}
+    const setPdfAsImage = (pdf) => {
+		fetch("/web-backend/pdf2img/", 
+            {
+				method: 'POST',
+				headers:{
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ pdf:pdf })
+			}
+        )
+        .then( res => {
+            if(!res.ok){
+                throw new Error( `Backend responses: ${res.status}`)
+            }
+            return res.json()
+        })
+		.then((json)=> { setImage(json.img) })
+		.catch( (err) => {
+			console.log("that didnt work" + err);
+			alert("Beim Konvertieren ist leider etwas schief gegangen :/")
+		})
+    }
 	
 	const onSelectFile = (e) => {
-		console.log("selected file")
 		if (e.target.files && e.target.files.length > 0) {
-			const reader = new FileReader();
-			reader.addEventListener('load', () => setImage(reader.result));
-			reader.readAsDataURL(e.target.files[0]);
+			let file = e.target.files[0]
+			if (file.type === "application/pdf"){
+                //convert
+                const reader = new FileReader();
+                reader.addEventListener('load', () => setPdfAsImage(reader.result));
+                reader.readAsDataURL(file);
+			}else{
+				const reader = new FileReader();
+				reader.addEventListener('load', () => setImage(reader.result));
+				reader.readAsDataURL(file);
+			}
 		}
 	}
 
@@ -108,7 +137,7 @@ function App() {
     return (
 		<div className="App">
 			<div className={"column column-left"}>
-				<input type="file" accept="image/*" onChange={onSelectFile} />
+				<input type="file" accept="image/*,application/pdf" onChange={onSelectFile} />
 				<div className="imageArea">
 					{taskList.tasks.map(
 						(task) => <Rectangle key={"rect" + task.id} width={task.crop.width} height={task.crop.height} x={task.crop.x} y={task.crop.y} />
