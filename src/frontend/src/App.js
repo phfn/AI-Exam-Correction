@@ -16,6 +16,7 @@ function App() {
     const [editing, setEditing] = useState(false)
 	const [submitText, setSubmitText] = useState("")
 	const [image, setImage] = useState(exame)
+	const [exams, setExams] = useState([])
 	let imageElement = (
 		<img alt={image ? "An Site of an exame": "Please select a image"} id="p1" src={image} className="exame"/>
 	)
@@ -97,6 +98,18 @@ function App() {
 		}
 	}
 
+	const onSelectExams = (e) => {
+		let files = [...e.target.files]
+		let newExams = []
+		files.forEach( (file) => {
+			const reader = new FileReader();
+			reader.addEventListener('load', () => newExams.push(reader.result));
+			reader.readAsDataURL(file);
+		})
+		setExams(newExams)
+	}
+	
+
 	function sendToBackend(){
 		fetch("/web-backend/", 
 			{
@@ -118,7 +131,7 @@ function App() {
 							}
 						}),
 						img: image,
-						documentsToCheck: document.getElementById("docsToCorrect").files
+						exams: exams
 					}
 				)
 			})
@@ -156,8 +169,8 @@ function App() {
 
 				<button onClick={() => AddOnClick()} disabled={!IsAddEnabled()}>Add</button>
 				<Tasks tasks={taskList.tasks} setTasks={setTasks} load={load} del={del} save={saveCropInExistingTask} editing={editing} setEditing={setEditing}/>
-				Select documents to correct
-				<input type="file" id="docsToCorrect" multiple="multiple"></input>
+				Select documents to correct<br/>
+				<input type="file" accept="image/*,application/pdf" multiple="multiple" onChange={onSelectExams}/>
 				{taskList.tasks.length>0 && <div><button onClick={sendToBackend} >Submit</button><pre>{submitText}</pre></div>}
             </div>
 

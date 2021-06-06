@@ -1,1 +1,5 @@
 flask
+pdf2image
+pillow
+pytest
+
