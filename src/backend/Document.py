@@ -13,7 +13,7 @@ class Document:
     img: Image = field(compare=False)
     tasks: List[Task] = field(default_factory=list, compare=True)
     img_modified: Image = field(default=None, compare=False, init=False)
-    exams : list = field(default=None, compare=False, init=True)
+    exams : list = field(default_factory=list, compare=False, init=True)
 
 
     def add_exam(self, img : Image):
