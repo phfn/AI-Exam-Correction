@@ -1,16 +1,16 @@
-import Cropper from "./components/Cropper";
-import Tasks from "./components/Tasks";
-import Rectangle from "./components/Rectangle";
+import Cropper from "./Cropper";
+import Tasks from "./Tasks";
+import Rectangle from "./Rectangle";
 import "cropperjs/dist/cropper.css";
 import {useState} from 'react'
-import exame from './pics/exame.jpg'
-import './App.css'
+import exame from '../pics/exame.jpg'
+import './TaskSelector.css'
 
 
 
 let defaultTaskType = 'text'
 
-function App() {
+function TaskSelecter() {
     const [crop, setCrop] = useState({});
     const [taskList, setTaskList] = useState({tasks: [], i: 0})
     const [editing, setEditing] = useState(false)
@@ -149,7 +149,7 @@ function App() {
 
 
     return (
-		<div className="App">
+		<div className="TaskSelector">
 			<div className={"column column-left"}>
 				<input type="file" accept="image/*,application/pdf" onChange={onSelectFile} />
 				<div className="imageArea">
@@ -178,4 +178,4 @@ function App() {
     );
 }
 
-export default App;
+export default TaskSelecter;
