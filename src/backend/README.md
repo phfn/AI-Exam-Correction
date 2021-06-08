@@ -24,7 +24,7 @@ http {
         server_name  localhost;
 
         #run python backend on port 5000
-        location /api/ {
+        location /web-backend/ {
             proxy_pass http://localhost:5000/;
         }
 
