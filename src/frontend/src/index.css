@@ -11,3 +11,35 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* 
+ * layout is 
+ *  8vh header 
+ * 86vh App
+ *  6vh footer
+ */
+
+.header{
+	color: white;
+	background-color: #80ba24;
+	height: 8vh;
+	display: flex;
+	align-items: center;
+}
+.title{
+	font-weight: bold;
+	font-size: 2rem;
+}
+.App{
+	height: 86vh;
+}
+.footer{
+	background-color: #4a5d66;
+	height: 6vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.footer *{
+	color: #80ba24;
+	margin: 1rem;
+}

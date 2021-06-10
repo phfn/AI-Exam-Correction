@@ -1,10 +1,13 @@
 .exame{
     width: 100%
 }
+.TaskSelector{
+	height: 100%;
+}
 .column{
     float: left;
     width: 50%;
-	height: 100vh;
+	height: 100%;
 	overflow: auto;
 }
 .imageArea{

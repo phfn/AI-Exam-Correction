@@ -10,7 +10,7 @@ import './TaskSelector.css'
 
 let defaultTaskType = 'text'
 
-function TaskSelecter() {
+function TaskSelector() {
     const [crop, setCrop] = useState({});
     const [taskList, setTaskList] = useState({tasks: [], i: 0})
     const [editing, setEditing] = useState(false)
@@ -178,4 +178,4 @@ function TaskSelecter() {
     );
 }
 
-export default TaskSelecter;
+export default TaskSelector;
