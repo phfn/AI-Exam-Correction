@@ -1,10 +1,10 @@
 const Header = ({ title }) => {
     return(
-        <header>
-            <h1 style={{color: "red", backgroundColor:"green"}}>
+        <div className="header">
+            <p className="title">
                 {title}
-            </h1>
-        </header>
+            </p>
+        </div>
     )
 }
 Header.defaultProps = {
