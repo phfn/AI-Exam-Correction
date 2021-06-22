@@ -1,5 +1,8 @@
 # Web Backend
 
+ [![pipeline status](https://git.thm.de/tnhm62/swtp-1-ki-ocr/badges/dev/pipeline.svg)](https://git.thm.de/tnhm62/swtp-1-ki-ocr/-/commits/dev)
+ [![coverage report](https://git.thm.de/tnhm62/swtp-1-ki-ocr/badges/dev/coverage.svg)](https://git.thm.de/tnhm62/swtp-1-ki-ocr/-/commits/dev)
+
 ## Start dev
 
 While development you can start the server, by just calling:
