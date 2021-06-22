@@ -2,7 +2,7 @@ flask
 pdf2image
 pillow
 pytest
-
+pytest-cov
 
 numpy
 opencv-contrib-python
