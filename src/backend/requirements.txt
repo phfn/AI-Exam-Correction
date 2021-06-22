@@ -3,3 +3,7 @@ pdf2image
 pillow
 pytest
 
+
+numpy
+opencv-contrib-python
+
