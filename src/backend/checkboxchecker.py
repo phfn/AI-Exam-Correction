@@ -51,7 +51,7 @@ def intersection(a,b):
       return [x, y, w, h]
   return 
 
-def find_checkboxes(picture, margin=26):
+def find_checkboxes(picture, roi, margin=26):
     if margin == 0: margin = 1
     original = picture
     image = original.copy()
@@ -74,7 +74,7 @@ def find_checkboxes(picture, margin=26):
 
     bin_img_final = bin_img_h | bin_img_v
 
-    contours, hierarchy = cv.findContours(bin_img_final, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    contours, hierachy = cv.findContours(bin_img_final, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     
     checkboxes = []
     
@@ -84,7 +84,7 @@ def find_checkboxes(picture, margin=26):
         approx = cv.approxPolyDP(contours[i], 0.02 * myvar1, True)
         (x,y,w,h) = cv.boundingRect(approx)
         aspect_ratio = float(w) / h
-        if aspect_ratio >= 0.8 and aspect_ratio <= 1.2 and (w + h) < cksize:
+        if aspect_ratio >= 0.8 and aspect_ratio <= 1.2 and (w + h) < cksize and hierachy[0][i][3] == -1:
             checkboxes.append([x,y,x+w,y+h])
         
     checkboxes = __checkbox_checker(checkboxes)
@@ -97,6 +97,9 @@ def find_checkboxes(picture, margin=26):
         cv.putText(drawing, str(b), (box[0]-int(margin), box[1]+int(margin)), cv.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
         i += 1
     return checkboxes, drawing
+
+
+# return list[1,5,9], ver Bsp. 
 
 def countCheckboxPixels(checkbox, img):
     # get the region of interest by cropping it out of the array

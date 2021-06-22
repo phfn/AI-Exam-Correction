@@ -7,31 +7,74 @@ from Task import Task
 from task_types import Task_type
 from checkboxchecker import find_checkboxes
 from letterdetection import lettercropping
+from Exam import Exam
 
-def preprocessing_interface(document: Document):
+def autocorrect_exams(document: Document):
+
+    exam : Exam
+    for exam in document.exams:
+        image = cv.cvtColor(np.array(exam.img), cv.COLOR_RGB2BGR)
+        task : Task
+
+        for task in exam.tasks:
+            task_type = task.task_type
+            roi = [task.x,task.y,task.x+task.width,task.y+task.height]
+
+            if task_type == Task_type.SINGLE_CHOICE:
+                task.actual_answer, img = find_checkboxes(image, roi)
+                exam.img_modified = img.paste(img, task.x, task.y)
+
+            elif task_type == Task_type.MULTIPLE_CHOICE:
+                task.actual_answer, img = find_checkboxes(image, roi)
+                exam.img_modified = img.paste(img, task.x, task.y)
+
+            elif task_type == Task_type.NUMBER:
+                task.actual_answer = lettercropping(image, roi, task_type)
+
+            elif task_type == Task_type.TEXT:
+                task.actual_answer = lettercropping(image, roi, task_type)
+
+            elif task_type == Task_type.TEXT_NO_NUMBERS:
+                task.actual_answer = lettercropping(image, roi, task_type)
+
+            elif task_type == Task_type.SHAPE:
+                pass
+
+            else:
+                raise ValueError("Unknown Task Type")
+
+    return document
+
+
+def autodetect_expected_answers(document : Document):
     image = cv.cvtColor(np.array(document.img), cv.COLOR_RGB2BGR)
-    tasks = document.tasks
-    processed_image = image.copy()
-    roi = []
-    for task in tasks:
+    task : Task
+
+    for task in document.tasks:
         task_type = task.task_type
-        roi = task.x,task.y,task.x+task.width,task.y+task.height
+        roi = [task.x,task.y,task.x+task.width,task.y+task.height]
 
         if task_type == Task_type.SINGLE_CHOICE:
-            find_checkboxes(image, roi)
+            task.expected_answer, img = find_checkboxes(image, roi)
+            document.img_modified = img.paste(img, task.x, task.y)
+
         elif task_type == Task_type.MULTIPLE_CHOICE:
-            find_checkboxes(image, roi)
+            task.expected_answer, img = find_checkboxes(image, roi)
+            document.img_modified = img.paste(img, task.x, task.y)
+
         elif task_type == Task_type.NUMBER:
-            lettercropping(image, roi, task_type)
+            task.expected_answer = lettercropping(image, roi, task_type)
+
         elif task_type == Task_type.TEXT:
-            lettercropping(image, roi, task_type)
+            task.expected_answer = lettercropping(image, roi, task_type)
+
         elif task_type == Task_type.TEXT_NO_NUMBERS:
-            lettercropping(image, roi, task_type)
+            task.expected_answer = lettercropping(image, roi, task_type)
+
         elif task_type == Task_type.SHAPE:
             pass
+
         else:
             raise ValueError("Unknown Task Type")
-            
-            
-    
-    return document
+
+        return document
