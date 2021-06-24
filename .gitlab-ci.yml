@@ -1,0 +1,13 @@
+stages:
+  - test
+
+test:
+  stage: test
+  image: python
+  before_script:
+    - cd src/backend/
+    - python -V  # Print out python version for debugging
+    - pip install -r requirements.txt
+
+  script:
+    - pytest --cov=.
