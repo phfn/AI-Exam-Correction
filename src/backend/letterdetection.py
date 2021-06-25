@@ -50,7 +50,6 @@ def lettercropping(image, roi, task_types):
         for char in line:
             str_letters += str(char)
 
-    print(str_letters)
     return str_letters
 
 #-----------------------------------------------------

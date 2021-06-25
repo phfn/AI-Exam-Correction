@@ -1,3 +1,5 @@
+import io
+
 import cv2 as cv
 import numpy as np
 from PIL import Image
@@ -8,13 +10,13 @@ from task_types import Task_type
 from checkboxchecker import find_checkboxes
 from letterdetection import lettercropping
 from Exam import Exam
+from PIL import Image
 
-def autocorrect_exams(document: Document):
 
-    exam : Exam
+def autocorrect_exams(document: Document) -> Document:
     for exam in document.exams:
         image = cv.cvtColor(np.array(exam.img), cv.COLOR_RGB2BGR)
-        task : Task
+        task: Task
 
         for task in exam.tasks:
             task_type = task.task_type
@@ -46,9 +48,8 @@ def autocorrect_exams(document: Document):
     return document
 
 
-def autodetect_expected_answers(document : Document):
+def autodetect_expected_answers(document: Document):
     image = cv.cvtColor(np.array(document.img), cv.COLOR_RGB2BGR)
-    task : Task
 
     for task in document.tasks:
         task_type = task.task_type
