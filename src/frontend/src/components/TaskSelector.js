@@ -2,7 +2,7 @@ import Cropper from "./Cropper";
 import Tasks from "./Tasks";
 import Rectangle from "./Rectangle";
 import "cropperjs/dist/cropper.css";
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import exame from '../pics/exame.jpg'
 import './TaskSelector.css'
 
@@ -12,14 +12,41 @@ let defaultTaskType = 'text'
 
 function TaskSelector() {
     const [crop, setCrop] = useState({});
+    const [crop_percentage, setCrop_percentage] = useState({"width":0, "height":0, "unit": "%"});
     const [taskList, setTaskList] = useState({tasks: [], i: 0})
     const [editing, setEditing] = useState(false)
 	const [submitText, setSubmitText] = useState("")
 	const [image, setImage] = useState(exame)
 	const [exams, setExams] = useState([])
+    const croppingArea = useRef()
+	let imageElementRef = useRef()
 	let imageElement = (
-		<img alt={image ? "An Site of an exame": "Please select a image"} id="p1" src={image} className="exame"/>
+		<img ref={imageElementRef} alt={image ? "An Site of an exame": "Please select a image"} id="p1" src={image} className="exame"/>
 	)
+	let naturalWidth = imageElementRef.current ? imageElementRef.current.naturalWidth : 0
+	let naturalHeight = imageElementRef.current ? imageElementRef.current.naturalHeight : 0
+
+    let imageWidth = croppingArea.current ? croppingArea.current.offsetWidth : 0
+    let imageHeight = croppingArea.current ? croppingArea.current.offsetHeight : 0
+
+    function convertToPixelCrop(crop) {
+      if (!crop.unit) {
+        return { ...crop, unit: 'px' };
+      }
+
+      if (crop.unit === 'px') {
+        return crop;
+      }
+
+      return {
+        unit: 'px',
+        aspect: crop.aspect,
+        x: (crop.x * imageWidth) / 100,
+        y: (crop.y * imageHeight) / 100,
+        width: (crop.width * imageWidth) / 100,
+        height: (crop.height * imageHeight) / 100,
+      };
+    }
 
 	let setTasks = (tasks) => {
 		setTaskList({...taskList, tasks: tasks})
@@ -42,22 +69,22 @@ function TaskSelector() {
     let saveCropInExistingTask = (new_task) => {
         let newTasks = taskList.tasks.map((task) => {
                 if (task.id === new_task.id) {
-					return {...task, crop: crop}
+					return {...task, crop: crop_percentage}
 				} else {
                     return task
                 }
             }
         )
         setTaskList({...taskList, tasks: newTasks})
-        setCrop({...crop, x: 0, y: 0, width: 0, height: 0})
+        setCrop({...crop_percentage, x: 0, y: 0, width: 0, height: 0})
     }
 
 
     let AddOnClick = () => {
-		saveCropInNewTask(crop)
+		saveCropInNewTask(crop_percentage)
     }
     let IsAddEnabled = () => {
-		return crop.width>0&&crop.height>0&&!editing
+		return crop_percentage.width>0&&crop_percentage.height>0&&!editing
 	}
     const setPdfAsImage = (pdf) => {
 		fetch("/web-backend/pdf2img/", 
@@ -120,11 +147,14 @@ function TaskSelector() {
 				body: JSON.stringify(
 					{
 						tasks: taskList.tasks.map((task) => {
+                            // console.log(task);
+							console.log(task.crop.width)
+							console.log(naturalWidth)
 							return {
-								x: task.crop.x,
-								y: task.crop.y,
-								height: task.crop.height,
-								width: task.crop.width,
+								x: Math.round((task.crop.x*naturalWidth)/100),
+								y: Math.round((task.crop.y*naturalHeight)/100),
+								height: Math.round((task.crop.height*naturalHeight)/100),
+								width: Math.round((task.crop.width*naturalWidth)/100),
 								type: task.type,
 								expected: task.expected,
 
@@ -143,30 +173,38 @@ function TaskSelector() {
 				return res.json()
 					
 			})
-			.then( (json) => {setSubmitText("Successful"); console.log(json)} )
+            .then( (json) => {setSubmitText("Successful"); console.log(json); alert(JSON.stringify(json.tasks))} )
 			.catch( (err) => {console.error("Something went wrong while sending to backend. \n" + err); setSubmitText("Failed :/")} )
 	}
 
+    
 
     return (
 		<div className="TaskSelector">
 			<div className={"column column-left"}>
 				<input type="file" accept="image/*,application/pdf" onChange={onSelectFile} />
 				<div className="imageArea">
-					{taskList.tasks.map(
-						(task) => <Rectangle key={"rect" + task.id} width={task.crop.width} height={task.crop.height} x={task.crop.x} y={task.crop.y} />
-					)}
+					{taskList.tasks.map( (task) => {
+                        task.crop_px = convertToPixelCrop(task.crop)
+                        return(
+                        <Rectangle
+                        key={"rect" + task.id}
+                        width={task.crop_px.width}
+                        height={task.crop_px.height}
+                        x={task.crop_px.x}
+                        y={task.crop_px.y}
+                        />
+					)})}
 					<Cropper
 						disabled={false}
 						crop={crop}
 						component={imageElement}
-						onChange={newCrop => setCrop(newCrop)}
-						onConplete={newCrop => setCrop(newCrop)}
+						onChange={(newCrop_px, newCrop_percentage)=> {setCrop(newCrop_px); setCrop_percentage(newCrop_percentage)}}
+                        ref={croppingArea}
 					/>
 				</div>
 			</div>
 			<div className={"column column-right"}>
-
 				<button onClick={() => AddOnClick()} disabled={!IsAddEnabled()}>Add</button>
 				<Tasks tasks={taskList.tasks} setTasks={setTasks} load={load} del={del} save={saveCropInExistingTask} editing={editing} setEditing={setEditing}/>
 				Select documents to correct<br/>

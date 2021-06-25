@@ -26,7 +26,9 @@ const Task = ({task, setTask, load, del, save, editing, setEditing}) => {
 	} 
 	const options = [
 		{ value: 'text', label: 'Text' , default: ""},
-		{ value: 'checkbox', label: 'Single Choice Checkbox', default: '0' },
+		{ value: 'text no numbers', label: 'Text without Numbers', default: '0' },
+		{ value: 'single choice', label: 'Single Choice Checkbox', default: '0' },
+		{ value: 'multiple choice', label: 'Multiple Choice Checkbox', default: '0' },
 		]
 	return(
 	<div className={"task"}>
