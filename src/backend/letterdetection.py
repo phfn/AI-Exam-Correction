@@ -48,7 +48,7 @@ def lettercropping(image, roi, task_types):
     str_letters = ""
     for line in letters_as_arrays:
         for char in line:
-            str_letters += str(char)
+            str_letters += str(char).lower()
 
     return str_letters
 
