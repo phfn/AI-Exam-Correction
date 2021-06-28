@@ -7,3 +7,7 @@ pytest-cov
 numpy
 opencv-contrib-python
 
+
+numpy
+opencv-contrib-python
+
