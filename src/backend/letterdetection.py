@@ -52,7 +52,7 @@ def lettercropping(image, roi, task_types):
 
     return str_letters
 
-#-----------------------------------------------------
+# -----------------------------------------------------------------------
 
 def letters_from_line(image, roi, task_types):
 
@@ -111,3 +111,23 @@ def enlarge_image(image):
     rowsPadding = (int(math.ceil((28 - rows) / 2.0)), int(math.floor((28 - rows) / 2.0)))
     image = np.lib.pad(image, (rowsPadding, colsPadding), 'constant')
     return image
+
+# -----------------------------------------------------------------------
+
+def union(a,b):
+  x = min(a[0], b[0])
+  y = min(a[1], b[1])
+  w = max(a[0], b[2])
+  h = max(a[3], b[3])
+  return [x, y, w, h]
+
+def intersection(a,b):
+  x = max(a[0], b[0])
+  y = max(a[1], b[1])
+  w = min(a[2], b[2])
+  h = min(a[3], b[3])
+  if w - x >= 0 and h - y >= 0:
+      return [x, y, w, h]
+  return False
+
+

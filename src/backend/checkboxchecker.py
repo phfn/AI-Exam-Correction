@@ -3,8 +3,8 @@ import itertools
 
 
 '''
-This function will accept a picture as a numpy array. 
-You can load a picture as an array by using imageio. 
+This function will accept a picture as a numpy array.
+You can load a picture as an array by using imageio.
 
 '''
 # get the big boxes out the little ones. 
@@ -26,18 +26,15 @@ def __checkbox_checker(boxes):
             tempbox.append(box)
     sorted(tempbox)
     newbox = list(tempbox for tempbox,_ in itertools.groupby(tempbox))
-    
+
     return newbox
 
-def sortCheckboxes(boxes):
-    pass   
-    
 # combines two rectangels to a bigger one. 
 def union(a,b):
   x = min(a[0], b[0])
   y = min(a[1], b[1])
-  w = max(a[0], b[2]) 
-  h = max(a[3], b[3]) 
+  w = max(a[0], b[2])
+  h = max(a[3], b[3])
   return [x, y, w, h]
 
 # function to check if two rectangels are intersecting. 
@@ -47,15 +44,15 @@ def intersection(a,b):
   y = max(a[1], b[1])
   w = min(a[2], b[2])
   h = min(a[3], b[3])
-  if w - x >= 0 and h - y >= 0: 
+  if w - x >= 0 and h - y >= 0:
       return [x, y, w, h]
-  return 
+  return
 
 def find_checkboxes(picture, roi, margin=26):
     if margin == 0: margin = 1
     original = picture
     image = original.copy()
-    
+
     cksize =  3 * margin
 
     drawing = image.copy()
@@ -75,9 +72,9 @@ def find_checkboxes(picture, roi, margin=26):
     bin_img_final = bin_img_h | bin_img_v
 
     contours, hierachy = cv.findContours(bin_img_final, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    
+
     checkboxes = []
-    
+
     for i in range(len(contours)):
         color = (0,0,255)
         myvar1 = cv.arcLength(contours[i], True)
@@ -86,20 +83,21 @@ def find_checkboxes(picture, roi, margin=26):
         aspect_ratio = float(w) / h
         if aspect_ratio >= 0.8 and aspect_ratio <= 1.2 and (w + h) < cksize and hierachy[0][i][3] == -1:
             checkboxes.append([x,y,x+w,y+h])
-        
+
     checkboxes = __checkbox_checker(checkboxes)
     checkboxes = sortCheckboxes(checkboxes)
+    crossed_boxes = []
     i=1
     for box in checkboxes:
-        cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), (0,0,255),2)    
+        cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), (0,0,255),2)
         cv.putText(drawing, str(i), (box[0], box[1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
         b = countCheckboxPixels(box, drawing)
+        if b == 'x':
+            crossed_boxes.append(i)
         cv.putText(drawing, str(b), (box[0]-int(margin), box[1]+int(margin)), cv.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
         i += 1
-    return checkboxes, drawing
+    return crossed_boxes, drawing
 
-
-# return list[1,5,9], ver Bsp. 
 
 def countCheckboxPixels(checkbox, img):
     # get the region of interest by cropping it out of the array
@@ -125,4 +123,4 @@ def countCheckboxPixels(checkbox, img):
 
 def sortCheckboxes(boxes):
     return sorted(boxes, key=lambda box: [box[1], box[0]])
-    
+
