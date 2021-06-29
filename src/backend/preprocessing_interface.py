@@ -78,4 +78,4 @@ def autodetect_expected_answers(document: Document):
         else:
             raise ValueError("Unknown Task Type")
 
-        return document
+    return document
