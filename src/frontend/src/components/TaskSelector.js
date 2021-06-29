@@ -1,7 +1,6 @@
 import Cropper from "./Cropper";
 import Tasks from "./Tasks";
 import Rectangle from "./Rectangle";
-import "cropperjs/dist/cropper.css";
 import {useRef, useState} from 'react'
 import exame from '../pics/exame.jpg'
 import './TaskSelector.css'
