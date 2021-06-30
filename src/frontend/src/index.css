@@ -31,6 +31,7 @@ code {
 }
 .App{
 	height: 86vh;
+	overflow: hidden;
 }
 .footer{
 	background-color: #4a5d66;

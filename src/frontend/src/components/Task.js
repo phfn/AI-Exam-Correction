@@ -1,5 +1,5 @@
 import {useState} from 'react'
-const Task = ({task, setTask, load, del, save, editing, setEditing}) => {
+const Task = ({task, setTask, load, del, save, editing, setEditing, canEditAwnser}) => {
 
 	let [edit_mode, set_edit_mode] = useState(true)
 	let [btn_edit_text, set_btn_edit_text] = useState("Edit")
@@ -56,6 +56,7 @@ const Task = ({task, setTask, load, del, save, editing, setEditing}) => {
 					</select>
 
 				</div>
+				{canEditAwnser && (
 				<div className={"text_awnser"} key={"text_awnser"+task.id}>
 					{task.type === "text" &&
 					<div/* key={"text_awnser text"+task.id}*/>
@@ -70,6 +71,7 @@ const Task = ({task, setTask, load, del, save, editing, setEditing}) => {
 					</div>
 					}
 				</div>
+				)}
 			</form>
 
 		</div>

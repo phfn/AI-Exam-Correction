@@ -2,23 +2,39 @@ import Cropper from "./Cropper";
 import Tasks from "./Tasks";
 import Rectangle from "./Rectangle";
 import {useRef, useState} from 'react'
-import exame from '../pics/exame.jpg'
 import './TaskSelector.css'
 
 
 
 let defaultTaskType = 'text'
 
-function TaskSelector() {
+function TaskSelector({document, setDocument, leave}) {
+	const [reviewing, setReviewing] = useState(false)
+
     const [crop, setCrop] = useState({});
     const [crop_percentage, setCrop_percentage] = useState({"width":0, "height":0, "unit": "%"});
-    const [taskList, setTaskList] = useState({tasks: [], i: 0})
     const [editing, setEditing] = useState(false)
 	const [submitText, setSubmitText] = useState("")
-	const [image, setImage] = useState(exame)
-	const [exams, setExams] = useState([])
+
+	const taskList = document.taskList
+	const setTaskList = (newTaskList) => {
+		setDocument({...document, taskList: newTaskList})
+	}
+
+	const image = document.image
+	const setImage = (newImage) => {
+		setDocument({...document, image: newImage})
+	}
+
+	const exams = document.exams
+	const setExams = (newExams) => {
+		setDocument({...document, exams: newExams})
+	}
     const croppingArea = useRef()
 	let imageElementRef = useRef()
+
+
+	// ---------------
 	let imageElement = (
 		<img ref={imageElementRef} alt={image ? "An Site of an exame": "Please select a image"} id="p1" src={image} className="exame"/>
 	)
@@ -135,7 +151,17 @@ function TaskSelector() {
 		setExams(newExams)
 	}
 	
+	const taskListFromJson = (tasks) => {
+		let a = taskList.tasks.map((task, index) => {
+			let j_task = tasks[index]
+			return {
+				...task,
+				expected: j_task["expected_answer"]
+			}})
+		return {...taskList, tasks: a}
 
+
+	}
 	function sendToBackend(){
 		fetch("/web-backend/", 
 			{
@@ -147,8 +173,8 @@ function TaskSelector() {
 					{
 						tasks: taskList.tasks.map((task) => {
                             // console.log(task);
-							console.log(task.crop.width)
-							console.log(naturalWidth)
+							// console.log(task.crop.width)
+							// console.log(naturalWidth)
 							return {
 								x: Math.round((task.crop.x*naturalWidth)/100),
 								y: Math.round((task.crop.y*naturalHeight)/100),
@@ -172,7 +198,11 @@ function TaskSelector() {
 				return res.json()
 					
 			})
-            .then( (json) => {setSubmitText("Successful"); console.log(json); alert(JSON.stringify(json.tasks))} )
+			.then( (json) => {
+				setSubmitText("Successful");
+				setTaskList(taskListFromJson(json["tasks"]))
+				setReviewing(true)
+			})
 			.catch( (err) => {console.error("Something went wrong while sending to backend. \n" + err); setSubmitText("Failed :/")} )
 	}
 
@@ -184,14 +214,14 @@ function TaskSelector() {
 				<input type="file" accept="image/*,application/pdf" onChange={onSelectFile} />
 				<div className="imageArea">
 					{taskList.tasks.map( (task) => {
-                        task.crop_px = convertToPixelCrop(task.crop)
+						let crop_px = convertToPixelCrop(task.crop)
                         return(
                         <Rectangle
                         key={"rect" + task.id}
-                        width={task.crop_px.width}
-                        height={task.crop_px.height}
-                        x={task.crop_px.x}
-                        y={task.crop_px.y}
+                        width={crop_px.width}
+                        height={crop_px.height}
+                        x={crop_px.x}
+                        y={crop_px.y}
                         />
 					)})}
 					<Cropper
@@ -204,11 +234,16 @@ function TaskSelector() {
 				</div>
 			</div>
 			<div className={"column column-right"}>
-				<button onClick={() => AddOnClick()} disabled={!IsAddEnabled()}>Add</button>
-				<Tasks tasks={taskList.tasks} setTasks={setTasks} load={load} del={del} save={saveCropInExistingTask} editing={editing} setEditing={setEditing}/>
-				Select documents to correct<br/>
-				<input type="file" accept="image/*,application/pdf" multiple="multiple" onChange={onSelectExams}/>
-				{taskList.tasks.length>0 && <div><button onClick={sendToBackend} >Submit</button><pre>{submitText}</pre></div>}
+				{!reviewing && <button onClick={() => AddOnClick()} disabled={!IsAddEnabled()}>Add</button>}
+				<Tasks tasks={taskList.tasks} setTasks={setTasks} load={load} del={del} save={saveCropInExistingTask} editing={editing} setEditing={setEditing} canEditAwnser={reviewing}/>
+				{reviewing &&
+					<div>
+						select documents to correct<br/>
+						<input type="file" accept="image/*,application/pdf" multiple="multiple" onChange={onSelectExams}/>
+					</div>
+				}
+				{!reviewing && taskList.tasks.length>0 && <div><button onClick={sendToBackend} >Submit</button><pre>{submitText}</pre></div>}
+				{reviewing && <button onClick={leave}>Next</button>}
             </div>
 
         </div>
