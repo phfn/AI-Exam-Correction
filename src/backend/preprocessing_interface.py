@@ -11,6 +11,7 @@ from checkboxchecker import find_checkboxes
 from letterdetection import lettercropping
 from Exam import Exam
 from PIL import Image
+Image.MAX_IMAGE_PIXELS = None
 
 
 def autocorrect_exams(document: Document) -> Document:
@@ -24,11 +25,11 @@ def autocorrect_exams(document: Document) -> Document:
 
             if task_type == Task_type.SINGLE_CHOICE:
                 task.actual_answer, img = find_checkboxes(image, roi)
-                exam.img_modified = img.paste(img, task.x, task.y)
+                exam.img_modified.paste(img, (task.x, task.y))
 
             elif task_type == Task_type.MULTIPLE_CHOICE:
                 task.actual_answer, img = find_checkboxes(image, roi)
-                exam.img_modified = img.paste(img, task.x, task.y)
+                exam.img_modified.paste(img, (task.x, task.y))
 
             elif task_type == Task_type.NUMBER:
                 task.actual_answer = lettercropping(image, roi, task_type)
@@ -57,11 +58,11 @@ def autodetect_expected_answers(document: Document):
 
         if task_type == Task_type.SINGLE_CHOICE:
             task.expected_answer, img = find_checkboxes(image, roi)
-            document.img_modified = img.paste(img, task.x, task.y)
+            document.img_modified.paste(img, (task.x, task.y))
 
         elif task_type == Task_type.MULTIPLE_CHOICE:
             task.expected_answer, img = find_checkboxes(image, roi)
-            document.img_modified = img.paste(img, task.x, task.y)
+            document.img_modified.paste(img, (task.x, task.y))
 
         elif task_type == Task_type.NUMBER:
             task.expected_answer = lettercropping(image, roi, task_type)
