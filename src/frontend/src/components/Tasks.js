@@ -1,5 +1,5 @@
 import Task from "./Task"
-const Tasks = ({tasks, setTasks, load, del, save, editing, setEditing}) => {
+const Tasks = ({tasks, setTasks, load, del, save, editing, setEditing, canEditAwnser}) => {
 
 	let setTask = (task_to_edit) => {
         let newTasks = tasks.map((task) => {
@@ -18,7 +18,7 @@ const Tasks = ({tasks, setTasks, load, del, save, editing, setEditing}) => {
     return(
         <div className="Tasks">
         {tasks.map(
-                (task) =>  <Task key={task.id} task={task} setTask={setTask} load={load} del={del} editing={editing} save={save} setEditing={setEditing}/>
+                (task) =>  <Task key={task.id} task={task} setTask={setTask} load={load} del={del} editing={editing} save={save} setEditing={setEditing} canEditAwnser={canEditAwnser}/>
             )}
         </div>
     )

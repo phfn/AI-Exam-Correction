@@ -1,33 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import TaskSelector from './components/TaskSelector';
-import Header from './components/Header';
-import Footer from './components/Footer';
 import reportWebVitals from './reportWebVitals';
+import App from "./components/App"
+
 
 ReactDOM.render(
 	<React.StrictMode>
-		<div className="Site">
-			<Header title="Automatic Exam Correction" />
-			<div className="App">
-				<TaskSelector />
-			</div>
-			<Footer links={[
-				{
-					title: "Source", 
-					href: "https://git.thm.de/tnhm62/swtp-1-ki-ocr"
-				},
-				{
-					title: "THM",
-					href: "https://thm.de"
-				},
-				{
-					title: "Impressum",
-					href: "/impressum"
-				}
-			]} />
-		</div>
+		<App />
 	</React.StrictMode>,
   document.getElementById('root')
 );
