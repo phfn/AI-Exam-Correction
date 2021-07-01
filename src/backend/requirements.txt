@@ -3,11 +3,5 @@ pdf2image
 pillow
 pytest
 pytest-cov
-
 numpy
 opencv-contrib-python
-
-
-numpy
-opencv-contrib-python
-
