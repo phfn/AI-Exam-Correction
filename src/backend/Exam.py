@@ -7,8 +7,7 @@ class Exam:
 
     img : Image = field(compare=False)
     img_modified : Image = field(default=None, compare=False, init=False)
-    tasks : list[Task] = field(default_factory=list, compare=True)
+    tasks : list[Task] = field(default_factory=list, compare=True, init=True)
 
-    def __post_init__(self, tasks : list[Task]):
+    def __post_init__(self):
         self.img_modified = self.img
-        self.tasks = tasks
