@@ -5,3 +5,5 @@ pytest
 pytest-cov
 numpy
 opencv-contrib-python
+tensorflow
+pandas
