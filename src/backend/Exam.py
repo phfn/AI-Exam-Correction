@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from PIL import Image
 from Task import Task
 
-@dataclass()
+@dataclass
 class Exam:
 
     img : Image = field(compare=False)
