@@ -1,9 +1,8 @@
-import sys
 import io
 import json
 from io import BytesIO
 import re
-from preprocessing_interface import autocorrect_exams, autodetect_expected_answers
+from preprocessing_interface import autodetect_expected_answers
 from task_types import from_str
 from pdf2image import convert_from_bytes
 from base64 import b64decode, b64encode
@@ -11,7 +10,7 @@ from base64 import b64decode, b64encode
 from flask import Flask, request
 from PIL import Image
 
-from Document import Document
+from Exam_container import Exam_container
 from Task import Task
 from Exam import Exam
 
@@ -59,21 +58,21 @@ def get_base64_datatype(s: str):
     raise ValueError("The string is not a pdf nor an image")
 
 
-def convert_exams_to_PIL(exams: list[str]):
+def convert_base64_exams_to_PIL(exams: list[str]):
     """
     Convers a list of base64 images or pdfs into PIL Image objects
     """
     exames_pil = []
-    for exame in exams:
-        if get_base64_datatype(exame) == "pdf":
-            exame = convert_pdf_to_img(exame)
+    for exam in exams:
+        if get_base64_datatype(exam) == "pdf":
+            exam = convert_pdf_to_img(exam)
 
-        exames_pil.append(base_64_to_PIL_Image(exame))
+        exames_pil.append(base_64_to_PIL_Image(exam))
     return exames_pil
 
 
-def create_Document_from_json(json) -> Document:
-    img = base_64_to_PIL_Image(json["img"])
+def create_exam_container_from_json(json) -> Exam_container:
+    image = base_64_to_PIL_Image(json["img"])
     tasks = [
         Task(
             int(task["x"]),
@@ -84,15 +83,15 @@ def create_Document_from_json(json) -> Document:
             task["expected"],
             100
         )
-        for task in request.json["tasks"]
+        for task in json["tasks"]
     ]
-    exams_pil = convert_exams_to_PIL(request.json["exams"])
-    exams = [Exam(img, tasks) for img in exams_pil]
-    document = Document(img, tasks, exams)
-    return document
+    exam_images = convert_base64_exams_to_PIL(json["exams"])
+    exams = [Exam(image, tasks) for image in exam_images]
+    exam_container = Exam_container(Exam(image, tasks), exams)
+    return exam_container
 
 
-def create_json_from_Document(document: Document):
+def create_json_from_exam_container(exam_container: Exam_container):
     return {
         "tasks": [{
             "x": task.x,
@@ -101,9 +100,9 @@ def create_json_from_Document(document: Document):
             "height": task.height,
             "expected_answer": task.expected_answer,
             "actual_answer": task.actual_answer
-        } for task in document.tasks],
-        "img": PIL_Image_to_base_64(document.img),
-        "exams": [PIL_Image_to_base_64(exame) for exame in document.exams]
+        } for task in exam_container.correct_exam.tasks],
+        "img": PIL_Image_to_base_64(exam_container.correct_exam.image),
+        "exams": [PIL_Image_to_base_64(exam.image) for exam in exam_container.student_exams]
     }
 
 
@@ -124,11 +123,11 @@ def api():
         exams: A List of base64 encoded exams.
             Datatype can be image or application/pdf.
     """
-    document = create_Document_from_json(request.json)
-    document = autodetect_expected_answers(document)
+    exam_container = create_exam_container_from_json(request.json)
+    exam_container = autodetect_expected_answers(exam_container)
     # document = autocorrect_exams(document)
-    print(document.tasks)
-    return create_json_from_Document(document)
+    print(exam_container.correct_exam.tasks)
+    return create_json_from_exam_container(exam_container)
 
 
 def concat_images(images):
