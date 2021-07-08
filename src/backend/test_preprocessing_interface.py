@@ -19,7 +19,22 @@ exam_container = Exam_container(
         )
 
 def test_autocorrect_exams():
-    assert preprocessing_interface.autocorrect_exams(exam_container)
-    
+    text_task_types = [Task_type.NUMBER, Task_type.TEXT, Task_type.TEXT_NO_NUMBERS]
+
+    for tasktype in text_task_types:
+        for task_index, task in enumerate(exam_container.correct_exam.tasks):
+            exam_container.correct_exam.tasks[task_index].type = tasktype
+            
+            for exam_index, exam in enumerate(exam_container.student_exams):
+                for student_task_index, student_tasks in enumerate(exam.tasks):
+                    exam_container.student_exams[exam_index].tasks[student_task_index].type = tasktype
+                    preprocessing_interface.autocorrect_exams(exam_container)
+
 def test_autodetect_expectet_answers():
-    assert preprocessing_interface.autodetect_expected_answers(exam_container) 
+    text_task_types = [Task_type.NUMBER, Task_type.TEXT, Task_type.TEXT_NO_NUMBERS]
+
+    for tasktype in text_task_types:
+        for task_index, task in enumerate(exam_container.correct_exam.tasks):
+            exam_container.correct_exam.tasks[task_index].type = tasktype
+
+            preprocessing_interface.autodetect_expected_answers(exam_container) 
