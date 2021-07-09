@@ -3,6 +3,13 @@
  [![pipeline status](https://git.thm.de/tnhm62/swtp-1-ki-ocr/badges/dev/pipeline.svg)](https://git.thm.de/tnhm62/swtp-1-ki-ocr/-/commits/dev)
  [![coverage report](https://git.thm.de/tnhm62/swtp-1-ki-ocr/badges/dev/coverage.svg)](https://git.thm.de/tnhm62/swtp-1-ki-ocr/-/commits/dev)
 
+## Requirements
+Make sure all requirements are installed.
+```bash
+pip install -r requirements.txt
+```
+Also [poppler](https://gitlab.freedesktop.org/poppler/poppler/) is required. There is an Debian package "poppler-utils", which make installing relatively easy.
+
 ## Start dev
 
 While development you can start the server, by just calling:
@@ -11,9 +18,9 @@ While development you can start the server, by just calling:
 python web-backend.py
 ```
 
-When you wanna try it with the frontend, you have to use the same adress and port as the frontend.
+When you wanna try it with the frontend, you have to use the same address and port as the frontend.
 
-here a sample nginx setup you could use
+Here a sample nginx setup you could use
 
 ```nginx conf
 http {
