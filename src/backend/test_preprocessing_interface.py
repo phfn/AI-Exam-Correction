@@ -5,7 +5,7 @@ from Task import Task
 from task_types import Task_type
 from Exam import Exam
 
-img = Image.open("./test_images/testbob.png")
+img = Image.open("./test_files/testbob.png")
 
 tasks = [Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)]
 # error_tasks = [Task(1125, 965, 790, -1, Task_type.TEXT, "", 1, 1, "", 0)]

@@ -5,10 +5,10 @@ test:
   stage: test
   image: python:3
   before_script:
+    - apt update && apt install poppler-utils -y
     - pip install virtualenv
     - virtualenv venv
     - source venv/bin/activate
-    - python -V  # Print out python version for debugging
     - cd src/backend/
     - pip install -r requirements.txt --no-cache-dir
     #replace opencv with headless variant
