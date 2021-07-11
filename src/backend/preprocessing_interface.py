@@ -25,11 +25,11 @@ def autocorrect_exams(exam_container: Exam_container) -> Exam_container:
 
             if task.type == Task_type.SINGLE_CHOICE:
                 task.actual_answer, img = find_checkboxes(image, roi)
-                exam.img_modified.paste(img, (task.x, task.y))
+                exam.image_modified.paste(img, (task.x, task.y))
 
             elif task.type == Task_type.MULTIPLE_CHOICE:
                 task.actual_answer, img = find_checkboxes(image, roi)
-                exam.img_modified.paste(img, (task.x, task.y))
+                exam.image_modified.paste(img, (task.x, task.y))
 
             elif task.type == Task_type.NUMBER:
                 task.actual_answer = lettercropping(image, roi, task.type)
@@ -90,14 +90,14 @@ def autodetect_expected_answers(exam_container: Exam_container):
 
 def validate_exam_container(exam_container: Exam_container, check_student_exams : bool):
 
-    if exam_container.correct_exam.image.width <= 0 or exam_container.correct_exam.image.height <= 0: 
-        raise FileNotFoundError("No correct_exam image given")
+    if exam_container.correct_exam.image.width <= 27 or exam_container.correct_exam.image.height <= 27:
+        raise FileNotFoundError("Incorrect image size, has to be at least 28x28 pixel")
 
     for index, task in enumerate(exam_container.correct_exam.tasks):
         if task.x < 0 or task.y < 0:
             raise ValueError("Task ", str(index), " has negativ coordinates.")
 
-        if task.width <= 0 or task.height <= 0:
+        if task.width <= 27 or task.height <= 27:
             raise ValueError("Task ", str(index), " has negativ dimensions.")
 
         if task.max_points < 0:
@@ -110,8 +110,8 @@ def validate_exam_container(exam_container: Exam_container, check_student_exams 
     if check_student_exams:
         for exam_num, exam in enumerate(exam_container.student_exams):
 
-            if exam.image.width <= 0 or exam.image.height <= 0:
-                raise FileNotFoundError("Student exam #", exam_num, " is missing an image")
+            if exam.image.width <= 27 or exam.image.height <= 27:
+                raise FileNotFoundError("Student exam #", exam_num, " image too small (needs at least 28x28)")
             
             # Check every exam task
             for task_num, task in enumerate(exam.tasks):
