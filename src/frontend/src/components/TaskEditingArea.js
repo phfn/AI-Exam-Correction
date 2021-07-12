@@ -24,6 +24,16 @@ const TaskEditingArea = ({task, taskId, setTask, loadCroppingArea, deleteTask, s
 		n.expectedAnswer = expected
 		setTask(n)
 	}
+	let setMaxPoints = (maxPoints) => {
+		let n = task.clone()
+		n.maxPoints = maxPoints
+		setTask(n)
+	}
+	let setDeductionPerError = (deductionPerError) => {
+		let n = task.clone()
+		n.deductionPerError = deductionPerError
+		setTask(n)
+	}
 	const onSelectionChange = (event) => {
 		let option = options.filter(option => option.value === event.target.value)[0]
         let n = task.clone()
@@ -64,14 +74,22 @@ const TaskEditingArea = ({task, taskId, setTask, loadCroppingArea, deleteTask, s
 					</select>
 
 				</div>
-				{canEditAnswer && (
+				{canEditAnswer &&
 				<div className={"text_answer"} key={"text_answer"+taskId}>
 					<div>
 						<label htmlFor="text_answer">Correct Answer: </label>
 						<input type="text" name="text_answer" min="0" value={task.expectedAnswer} onChange={ (e) => {setExpected(e.target.value)} }/>
 					</div>
 				</div>
-				)}
+				}
+				<div className={"max_points"}>
+					<label htmlFor="max_points">Max Points</label>
+					<input type="number" name="max_points" min="0" value={task.maxPoints} onChange={(e) => {setMaxPoints(e.target.value)}} />
+				</div>
+				<div className={"deduction_per_error"}>
+					<label htmlFor="deduction_per_error">Deduction per error</label>
+					<input type="number" name="max_points" min="0" step="0.5" value={task.deductionPerError} onChange={(e) => {setDeductionPerError(e.target.value)}} />
+				</div>
 			</form>
 
 		</div>
