@@ -10,14 +10,17 @@ class Task_type(enum.Enum):
     TEXT_NO_NUMBERS = 4
     SHAPE = 5
 
+    def __str__(self) -> str:
+        return self.name.lower()
+
 
 def from_str(s: str):
     a = {
-        "SINGLE_CHOICE" : Task_type.SINGLE_CHOICE,
-        "MULTIPLE_CHOICE" : Task_type.MULTIPLE_CHOICE,
-        "NUMBER" : Task_type.NUMBER,
-        "TEXT" : Task_type.TEXT,
-        "TEXT_NO_NUMBERS" : Task_type.TEXT_NO_NUMBERS,
-        "SHAPE" : Task_type.SHAPE
+        "SINGLE_CHOICE": Task_type.SINGLE_CHOICE,
+        "MULTIPLE_CHOICE": Task_type.MULTIPLE_CHOICE,
+        "NUMBER": Task_type.NUMBER,
+        "TEXT": Task_type.TEXT,
+        "TEXT_NO_NUMBERS": Task_type.TEXT_NO_NUMBERS,
+        "SHAPE": Task_type.SHAPE
     }
     return a[s.upper().replace(" ", "_")]
