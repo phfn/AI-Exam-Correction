@@ -1,48 +1,55 @@
 import Cropper from "./Cropper";
-import Tasks from "./Tasks";
+import TaskEditingAreas from "./TaskEditingAreas";
 import Rectangle from "./Rectangle";
 import {useRef, useState} from 'react'
 import './TaskSelector.css'
+import {ExamContainer, Task} from "./ExamContainer"
 
 
 
-let defaultTaskType = 'text'
 
-function TaskSelector({document, setDocument, leave}) {
+function TaskSelector({exam, setExam, examContainer, setExamContainer, setStudentExams, leave}) {
 	const [reviewing, setReviewing] = useState(false)
 
     const [crop, setCrop] = useState({});
-    const [crop_percentage, setCrop_percentage] = useState({"width":0, "height":0, "unit": "%"});
+    const resetCrop = () =>{
+    	setCrop({...crop, x:0, y: 0, width: 0, height: 0})
+	}
     const [editing, setEditing] = useState(false)
 	const [submitText, setSubmitText] = useState("")
 
-	const taskList = document.taskList
-	const setTaskList = (newTaskList) => {
-		setDocument({...document, taskList: newTaskList})
-	}
+	const setTasks = (newTasks) => {
+        let n = exam.clone()
+		n.tasks = newTasks
+        setExam(n)
+    }
 
-	const image = document.image
-	const setImage = (newImage) => {
-		setDocument({...document, image: newImage})
-	}
-
-	const exams = document.exams
-	const setExams = (newExams) => {
-		setDocument({...document, exams: newExams})
-	}
     const croppingArea = useRef()
 	let imageElementRef = useRef()
 
 
-	// ---------------
 	let imageElement = (
-		<img ref={imageElementRef} alt={image ? "An Site of an exame": "Please select a image"} id="p1" src={image} className="exame"/>
+		<img ref={imageElementRef} alt={"Please select a file"} id="p1" src={exam.image} className="exame"/>
 	)
 	let naturalWidth = imageElementRef.current ? imageElementRef.current.naturalWidth : 0
 	let naturalHeight = imageElementRef.current ? imageElementRef.current.naturalHeight : 0
 
     let imageWidth = croppingArea.current ? croppingArea.current.offsetWidth : 0
     let imageHeight = croppingArea.current ? croppingArea.current.offsetHeight : 0
+    function convertToPercentCrop(crop) {
+      if (crop.unit === '%') {
+        return crop;
+      }
+
+      return {
+        unit: '%',
+        aspect: crop.aspect,
+        x: (crop.x / imageWidth) * 100,
+        y: (crop.y / imageHeight) * 100,
+        width: (crop.width / imageWidth) * 100,
+        height: (crop.height / imageHeight) * 100,
+      };
+    }
 
     function convertToPixelCrop(crop) {
       if (!crop.unit) {
@@ -63,43 +70,62 @@ function TaskSelector({document, setDocument, leave}) {
       };
     }
 
-	let setTasks = (tasks) => {
-		setTaskList({...taskList, tasks: tasks})
+
+    let loadTaskInCroppingArea = (index) => {
+        setCrop(convertNaturalToCrop(exam.tasks[index]))
+    }
+
+    let deleteTask = (index) => {
+        let n = exam.clone().tasks
+        n=n.filter(item => item !== exam.tasks[index])
+        setTasks(n)
+    }
+
+	const convertCropToNatural = (crop) => {
+        let crop_percentage = convertToPercentCrop(crop)
+		let x= Math.round((crop_percentage.x*naturalWidth)/100)
+		let y= Math.round((crop_percentage.y*naturalHeight)/100)
+		let width= Math.round((crop_percentage.width*naturalWidth)/100)
+		let height= Math.round((crop_percentage.height*naturalHeight)/100)
+		return {x: x, y:y, width: width, height: height}
 	}
+	const convertNaturalToCrop = (task) => {
+		let x= task.x/naturalWidth * 100
+		let y= task.y/naturalHeight * 100
+		let width= task.width/naturalWidth * 100
+		let height= task.height/naturalHeight * 100
 
-    let load = (task) => {
-        setCrop(task.crop)
-    }
-
-    let del = (id) => {
-        let newTasks = taskList.tasks.filter((task) => task.id !== id)
-        setTaskList({...taskList, tasks: newTasks})
-    }
-
+		return convertToPixelCrop({x: x, y:y, width: width, height: height, unit: "%"})
+	}
 	let saveCropInNewTask = (crop) => {
-		let newTask = {id: taskList.i, crop:crop, type:defaultTaskType, expected: ""}
-        setTaskList({i: taskList.i + 1, tasks: [...taskList.tasks, newTask]})
-        setCrop({...crop, x: 0, y: 0, width: 0, height: 0})
+		let a = convertCropToNatural(crop)
+		let task = new Task(a.x, a.y, a.width, a.height)
+		let n = exam.clone().tasks
+		n.push(task)
+        setTasks(n)
+        resetCrop()
     }
-    let saveCropInExistingTask = (new_task) => {
-        let newTasks = taskList.tasks.map((task) => {
-                if (task.id === new_task.id) {
-					return {...task, crop: crop_percentage}
-				} else {
-                    return task
-                }
-            }
-        )
-        setTaskList({...taskList, tasks: newTasks})
-        setCrop({...crop_percentage, x: 0, y: 0, width: 0, height: 0})
+
+    let saveCropInExistingTask = (index, crop) => {
+		let n = exam.clone().tasks
+        let task = n[index]
+		let {x, y, width, height} = convertCropToNatural(crop)
+        task.x = x
+		task.y = y
+		task.width = width
+		task.height = height
+        n[index] = task
+        setTasks(n)
+		resetCrop()
     }
 
 
     let AddOnClick = () => {
-		saveCropInNewTask(crop_percentage)
+		saveCropInNewTask(crop)
+		resetCrop()
     }
     let IsAddEnabled = () => {
-		return crop_percentage.width>0&&crop_percentage.height>0&&!editing
+		return crop.width>0&&crop.height>0&&!editing
 	}
     const setPdfAsImage = (pdf) => {
 		fetch("/web-backend/pdf2img/", 
@@ -117,13 +143,17 @@ function TaskSelector({document, setDocument, leave}) {
             }
             return res.json()
         })
-		.then((json)=> { setImage(json.img) })
+		.then((json)=> { setExamImage(json.img) })
 		.catch( (err) => {
 			console.log("that didnt work" + err);
 			alert("Beim Konvertieren ist leider etwas schief gegangen :/")
 		})
     }
-	
+    const setExamImage = ( image ) => {
+        let n = exam.clone()
+		n.image = image
+		setExam(n)
+    	}
 	const onSelectFile = (e) => {
 		if (e.target.files && e.target.files.length > 0) {
 			let file = e.target.files[0]
@@ -134,77 +164,55 @@ function TaskSelector({document, setDocument, leave}) {
                 reader.readAsDataURL(file);
 			}else{
 				const reader = new FileReader();
-				reader.addEventListener('load', () => setImage(reader.result));
+				reader.addEventListener('load', () => setExamImage(reader.result));
 				reader.readAsDataURL(file);
 			}
 		}
 	}
 
-	const onSelectExams = (e) => {
+
+	const handleFileChosen = async (file) => {
+	  return new Promise((resolve, reject) => {
+		let fileReader = new FileReader();
+		fileReader.onload = () => {
+		  resolve(fileReader.result);
+		};
+		fileReader.onerror = reject;
+		fileReader.readAsDataURL(file);
+	  });
+	}
+			
+	const onSelectExams = async (e) => {
 		let files = [...e.target.files]
-		let newExams = []
-		files.forEach( (file) => {
-			const reader = new FileReader();
-			reader.addEventListener('load', () => newExams.push(reader.result));
-			reader.readAsDataURL(file);
+		const results = await Promise.all( files.map( async (file) => {
+			const fileContents = await handleFileChosen(file);
+			return fileContents;
+		}) )
+        let filenames = files.map((file)=>{
+        	return file.name
 		})
-		setExams(newExams)
+		setStudentExams(results, filenames)
 	}
 	
-	const taskListFromJson = (tasks) => {
-		let a = taskList.tasks.map((task, index) => {
-			let j_task = tasks[index]
-			return {
-				...task,
-				expected: j_task["expected_answer"]
-			}})
-		return {...taskList, tasks: a}
-
-
-	}
-	function sendToBackend(){
-		fetch("/web-backend/", 
+	async function sendToBackend(){
+    	setSubmitText("...")
+		let response = await fetch("/web-backend/",
 			{
 				method: 'POST',
 				headers:{
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify(
-					{
-						tasks: taskList.tasks.map((task) => {
-                            // console.log(task);
-							// console.log(task.crop.width)
-							// console.log(naturalWidth)
-							return {
-								x: Math.round((task.crop.x*naturalWidth)/100),
-								y: Math.round((task.crop.y*naturalHeight)/100),
-								height: Math.round((task.crop.height*naturalHeight)/100),
-								width: Math.round((task.crop.width*naturalWidth)/100),
-								type: task.type,
-								expected: task.expected,
-
-							}
-						}),
-						img: image,
-						exams: exams
-					}
-				)
+                body: JSON.stringify(examContainer)
 			})
-			.then( res => {
-				if(!res.ok){
-					setSubmitText("Failed to reach the Backend")
-					throw new Error( `Backend responses: ${res.status}`)
-				}
-				return res.json()
-					
-			})
-			.then( (json) => {
-				setSubmitText("Successful");
-				setTaskList(taskListFromJson(json["tasks"]))
-				setReviewing(true)
-			})
-			.catch( (err) => {console.error("Something went wrong while sending to backend. \n" + err); setSubmitText("Failed :/")} )
+		if(!response.ok){
+			setSubmitText("failed to reach the backend")
+		}
+		let examContainer_json = await response.json()
+        setSubmitText("Successful")
+        setExamContainer(ExamContainer.fromJSON(examContainer_json))
+		setReviewing(true)
 	}
+
 
     
 
@@ -213,38 +221,40 @@ function TaskSelector({document, setDocument, leave}) {
 			<div className={"column column-left"}>
 				<input type="file" accept="image/*,application/pdf" onChange={onSelectFile} />
 				<div className="imageArea">
-					{taskList.tasks.map( (task) => {
-						let crop_px = convertToPixelCrop(task.crop)
+					{exam.tasks.map( (task, index) => {
+						let crop = convertNaturalToCrop(task)
                         return(
                         <Rectangle
-                        key={"rect" + task.id}
-                        width={crop_px.width}
-                        height={crop_px.height}
-                        x={crop_px.x}
-                        y={crop_px.y}
+                        key={"rect" + index}
+                        width={crop.width}
+                        height={crop.height}
+                        x={crop.x}
+                        y={crop.y}
                         />
 					)})}
 					<Cropper
 						disabled={false}
 						crop={crop}
 						component={imageElement}
-						onChange={(newCrop_px, newCrop_percentage)=> {setCrop(newCrop_px); setCrop_percentage(newCrop_percentage)}}
+						onChange={(newCrop_px)=> {setCrop(newCrop_px)}}
                         ref={croppingArea}
 					/>
 				</div>
 			</div>
-			<div className={"column column-right"}>
-				{!reviewing && <button onClick={() => AddOnClick()} disabled={!IsAddEnabled()}>Add</button>}
-				<Tasks tasks={taskList.tasks} setTasks={setTasks} load={load} del={del} save={saveCropInExistingTask} editing={editing} setEditing={setEditing} canEditAwnser={reviewing}/>
-				{reviewing &&
-					<div>
-						select documents to correct<br/>
-						<input type="file" accept="image/*,application/pdf" multiple="multiple" onChange={onSelectExams}/>
-					</div>
-				}
-				{!reviewing && taskList.tasks.length>0 && <div><button onClick={sendToBackend} >Submit</button><pre>{submitText}</pre></div>}
+            {examContainer.correctExam.image &&
+                <div className={"column column-right"}>
+				<button onClick={() => AddOnClick()} disabled={!IsAddEnabled()}>Add</button>
+				<TaskEditingAreas tasks={exam.tasks} setTasks={setTasks} loadCroppingArea={loadTaskInCroppingArea} deleteTask={deleteTask} saveCropInTask={(index) => {saveCropInExistingTask(index, crop)}} editing={editing} setEditing={setEditing} canEditAnswer={reviewing}/>
+				{exam.tasks.length>0 && <div>
+                    <button onClick={sendToBackend} >Submit</button><pre>{submitText}</pre>
+                </div>}
+                {reviewing && <div>
+                        select documents to correct<br/>
+                        <input type="file" accept="image/*,application/pdf" multiple="multiple" onChange={onSelectExams}/>
+                    </div>
+                }
 				{reviewing && <button onClick={leave}>Next</button>}
-            </div>
+            </div>}
 
         </div>
     );

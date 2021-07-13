@@ -1,7 +1,11 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-from task_types import Task_type
+from dataclasses_json import dataclass_json, config, LetterCase
 
+from task_types import Task_type, from_str
+
+
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Task:
     """Object that describes tasks contained in a document"""
@@ -9,7 +13,7 @@ class Task:
     y: int
     width: int
     height: int
-    type: Task_type
+    type: Task_type = field(metadata=config(decoder=from_str, encoder=str))
     expected_answer: str
     max_points: float
     deduction_per_error: float = 0

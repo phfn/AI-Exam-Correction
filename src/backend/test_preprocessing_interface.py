@@ -7,14 +7,15 @@ from Exam import Exam
 from pytest import raises
 from copy import deepcopy
 
-img = Image.open("./test_files/testbob.png")
+filename = "./test_files/testbob.png"
+img = Image.open(filename)
 
 tasks = [Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)]
 
-exams_students = [Exam(img, tasks)]
+exams_students = [Exam(img, filename, tasks)]
 
 exam_container = Exam_container(
-        Exam(img, tasks),
+        Exam(img, filename, tasks),
         exams_students
         )
 

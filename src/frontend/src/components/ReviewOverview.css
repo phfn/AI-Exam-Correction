@@ -1,0 +1,43 @@
+.ReviewOverview{
+	height: 100%;
+}
+.ReviewOverview div{
+    height: 100%;
+}
+.ReviewOverview .column{
+    float: left;
+    width: 50%;
+    height: 100%;
+    overflow: auto;
+}
+.ReviewOverview .column *{
+    text-align: center;
+}
+.ReviewOverview .column-left{
+    overflow-y: auto;
+    height: 100%;
+}
+.ReviewOverview .tableFixedHead{
+	border:1px solid black;
+    height: 80%;
+    width: 75%;
+    overflow: auto;
+    margin: auto;
+}
+.ReviewOverview thead{
+    position: sticky;
+    top: 0;
+}
+.ReviewOverview table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.ReviewOverview th {
+	background-color: #4a5d66;
+	color: #80ba24;
+}
+.ReviewOverview tr:nth-child(even){background-color: #f2f2f2;}
+.ReviewOverview tr:hover {background-color: #ddd;}
+.ReviewOverview td{
+    text-align: center;
+}
