@@ -15,7 +15,12 @@ const App = () => {
 	const [state, setState] = useState(
 		process.env.REACT_APP_TEST === "overview" ? 1 : 0
 	)
-	const [selectedExam, setSelectedExam] = useState()
+	const [selectedExamIndex, setSelectedExamIndex] = useState()
+	const setExam = (index, newExam) =>{
+		let n = examContainer.clone()
+		n.studentExams[index] = newExam
+		setExamContainer(n)
+	}
 	return(
 		<div className="Site">
 			<Header title="Automatic Exam Correction" />
@@ -42,10 +47,10 @@ const App = () => {
 				}
 				{state === 1 && <ReviewOverview
 					examContainer={examContainer}
-					reviewExam={(exam) => {setSelectedExam(exam); setState(state+1)}}
+					reviewExam={(examIndex) => {setSelectedExamIndex(examIndex); setState(state+1)}}
 				/>}
-				{state === 2 && <div>Hallo {selectedExam.filename}</div>}
-				{state > 2 && <ReviewExam selectedExam={selectedExam}/>}
+				{state === 2 && <ReviewExam exam={examContainer.studentExams[selectedExamIndex]} setExam={(newExam) => {setExam(selectedExamIndex, newExam)}} goBack={() => {setState(state-1)}}/>}
+				{state > 2 && <div>404</div>}
 			</div>
 			<Footer links={[
 				{

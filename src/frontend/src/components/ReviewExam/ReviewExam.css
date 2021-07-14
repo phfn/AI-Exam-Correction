@@ -1,0 +1,18 @@
+.hover{
+	border: 5px solid #8C160E;
+}
+.answers{
+	display: flex;
+	flex-direction: column;
+}
+.form{
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+}
+.form *{
+	margin-right: .5rem;
+}
+.form td{
+	text-align: center;
+}

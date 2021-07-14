@@ -35,7 +35,7 @@ function ReviewOverview({examContainer, reviewExam}){
                                         {points}/{max}
                                     </div>
                                 </td>
-								<td><button onClick={() => {reviewExam(exam)}}>Review</button></td>
+								<td><button onClick={() => {reviewExam(index)}}>Review</button></td>
                                 </tr>
                         })}
 
