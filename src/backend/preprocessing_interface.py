@@ -90,14 +90,14 @@ def autodetect_expected_answers(exam_container: Exam_container):
 
 def validate_exam_container(exam_container: Exam_container, check_student_exams : bool):
 
-    if exam_container.correct_exam.image.width <= 27 or exam_container.correct_exam.image.height <= 27:
-        raise FileNotFoundError("Incorrect image size, has to be at least 28x28 pixel")
+    if exam_container.correct_exam.image.width <= 1 or exam_container.correct_exam.image.height <= 1:
+        raise FileNotFoundError("Image too small")
 
     for index, task in enumerate(exam_container.correct_exam.tasks):
         if task.x < 0 or task.y < 0:
             raise ValueError("Task ", str(index), " has negativ coordinates.")
 
-        if task.width <= 27 or task.height <= 27:
+        if task.width <= 0 or task.height <= 0:
             raise ValueError("Task ", str(index), " has negativ dimensions.")
 
         if task.max_points < 0:
@@ -110,8 +110,8 @@ def validate_exam_container(exam_container: Exam_container, check_student_exams 
     if check_student_exams:
         for exam_num, exam in enumerate(exam_container.student_exams):
 
-            if exam.image.width <= 27 or exam.image.height <= 27:
-                raise FileNotFoundError("Student exam #", exam_num, " image too small (needs at least 28x28)")
+            if exam.image.width <= 1 or exam.image.height <= 1:
+                raise FileNotFoundError("Student exam #", exam_num, " image too small")
             
             # Check every exam task
             for task_num, task in enumerate(exam.tasks):
@@ -128,5 +128,5 @@ def validate_exam_container(exam_container: Exam_container, check_student_exams 
                 if task.deduction_per_error < 0:
                     raise ValueError("In task ", str(task_num), " in exam #", str(exam_num), " deduction_per_error should be positiv (including zero)")
 
-                if task.expected_answer.isspace() or len(task.expected_answer) <= 0:
+                if len(task.expected_answer) <= 0:
                     raise ValueError("Task ", str(task_num), " in exam #", str(exam_num), " has no expected answer")
