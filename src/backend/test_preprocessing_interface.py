@@ -7,59 +7,65 @@ from Exam import Exam
 from pytest import raises
 from copy import deepcopy
 
-   #filename = "./test_files/testbob.png"
-   #img = Image.open(filename)
-
-   #tasks = [Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)]
-
-   #exams_students = [Exam(img, filename, tasks)]
-
-   #exam_container = Exam_container(
-   #        Exam(img, filename, tasks),
-   #        exams_students
-   #        )
 
 def test_autocorrect_exams():
     filename = "./test_files/testbob.png"
     img = Image.open(filename)
 
-    tasks = [Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)]
+    text_task = Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)
+    checkbox_task = Task(1125, 965, 790, 225, Task_type.SINGLE_CHOICE, "1", 100.0, 20.0, "1", 0)
 
-    exams_students = [Exam(img, filename, tasks)]
+    exams_students = [Exam(img, filename, [text_task])]
 
     exam_container = Exam_container(
-            Exam(img, filename, tasks),
+            Exam(img, filename, [text_task]),
             exams_students
             )
-    text_task_types = [Task_type.NUMBER, Task_type.TEXT, Task_type.TEXT_NO_NUMBERS, Task_type.SINGLE_CHOICE, Task_type.MULTIPLE_CHOICE]
 
-    for tasktype in text_task_types:
+    for tasktype in Task_type:
         for task_index, task in enumerate(exam_container.correct_exam.tasks):
             exam_container.correct_exam.tasks[task_index].type = tasktype
+
+            if tasktype == Task_type.SINGLE_CHOICE or tasktype == Task_type.MULTIPLE_CHOICE:
+                exam_container.correct_exam.tasks[task_index] = checkbox_task
+            else: exam_container.correct_exam.tasks[task_index] = text_task
             
             for exam_index, exam in enumerate(exam_container.student_exams):
                 for student_task_index, student_tasks in enumerate(exam.tasks):
+
+                    if tasktype == Task_type.SINGLE_CHOICE or tasktype == Task_type.MULTIPLE_CHOICE:
+                        exam_container.student_exams[exam_index].tasks[student_task_index]= checkbox_task
+                    else: 
+                        exam_container.student_exams[exam_index].tasks[student_task_index] = text_task
+
                     exam_container.student_exams[exam_index].tasks[student_task_index].type = tasktype
+
                     preprocessing_interface.autocorrect_exams(exam_container)
 
 def test_autodetect_expectet_answers():
     filename = "./test_files/testbob.png"
     img = Image.open(filename)
 
-    tasks = [Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)]
+    text_task = Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)
+    checkbox_task = Task(1125, 965, 790, 225, Task_type.SINGLE_CHOICE, "1", 100.0, 20.0, "1", 0)
 
-    exams_students = [Exam(img, filename, tasks)]
+
+    exams_students = [Exam(img, filename, [text_task])]
 
     exam_container = Exam_container(
-            Exam(img, filename, tasks),
+            Exam(img, filename, [text_task]),
             exams_students
             )
-    text_task_types = [Task_type.NUMBER, Task_type.TEXT, Task_type.TEXT_NO_NUMBERS, Task_type.SINGLE_CHOICE, Task_type.MULTIPLE_CHOICE]
 
-    for tasktype in text_task_types:
+    for tasktype in Task_type:
+
         for task_index, task in enumerate(exam_container.correct_exam.tasks):
-            exam_container.correct_exam.tasks[task_index].type = tasktype
+            if tasktype == Task_type.SINGLE_CHOICE or tasktype == Task_type.MULTIPLE_CHOICE:
+                exam_container.correct_exam.tasks[task_index] = checkbox_task
+            else: exam_container.correct_exam.tasks[task_index] = text_task
 
+            exam_container.correct_exam.tasks[task_index].type = tasktype
+            
             preprocessing_interface.autodetect_expected_answers(exam_container) 
 
 
