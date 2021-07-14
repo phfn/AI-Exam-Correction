@@ -7,19 +7,30 @@ from Exam import Exam
 from pytest import raises
 from copy import deepcopy
 
-filename = "./test_files/testbob.png"
-img = Image.open(filename)
+   #filename = "./test_files/testbob.png"
+   #img = Image.open(filename)
 
-tasks = [Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)]
+   #tasks = [Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)]
 
-exams_students = [Exam(img, filename, tasks)]
+   #exams_students = [Exam(img, filename, tasks)]
 
-exam_container = Exam_container(
-        Exam(img, filename, tasks),
-        exams_students
-        )
+   #exam_container = Exam_container(
+   #        Exam(img, filename, tasks),
+   #        exams_students
+   #        )
 
 def test_autocorrect_exams():
+    filename = "./test_files/testbob.png"
+    img = Image.open(filename)
+
+    tasks = [Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)]
+
+    exams_students = [Exam(img, filename, tasks)]
+
+    exam_container = Exam_container(
+            Exam(img, filename, tasks),
+            exams_students
+            )
     text_task_types = [Task_type.NUMBER, Task_type.TEXT, Task_type.TEXT_NO_NUMBERS, Task_type.SINGLE_CHOICE, Task_type.MULTIPLE_CHOICE]
 
     for tasktype in text_task_types:
@@ -32,6 +43,17 @@ def test_autocorrect_exams():
                     preprocessing_interface.autocorrect_exams(exam_container)
 
 def test_autodetect_expectet_answers():
+    filename = "./test_files/testbob.png"
+    img = Image.open(filename)
+
+    tasks = [Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)]
+
+    exams_students = [Exam(img, filename, tasks)]
+
+    exam_container = Exam_container(
+            Exam(img, filename, tasks),
+            exams_students
+            )
     text_task_types = [Task_type.NUMBER, Task_type.TEXT, Task_type.TEXT_NO_NUMBERS, Task_type.SINGLE_CHOICE, Task_type.MULTIPLE_CHOICE]
 
     for tasktype in text_task_types:
@@ -42,6 +64,17 @@ def test_autodetect_expectet_answers():
 
 
 def test_autodetect_expected_answers_error():
+    filename = "./test_files/testbob.png"
+    img = Image.open(filename)
+
+    tasks = [Task(1125, 965, 790, 225, Task_type.TEXT, "ANSWER", 100.0, 20.0, "", 0)]
+
+    exams_students = [Exam(img, filename, tasks)]
+
+    exam_container = Exam_container(
+            Exam(img, filename, tasks),
+            exams_students
+            )
 
     # Too slim image test
     with raises(FileNotFoundError): 
@@ -70,13 +103,13 @@ def test_autodetect_expected_answers_error():
     # Invalid size
     with raises(ValueError):
         error_exam_container = deepcopy(exam_container)
-        error_exam_container.correct_exam.tasks[0].width = 27
+        error_exam_container.correct_exam.tasks[0].width = 0
         preprocessing_interface.autodetect_expected_answers(error_exam_container)
 
     # Invalid size
     with raises(ValueError):
         error_exam_container = deepcopy(exam_container)
-        error_exam_container.correct_exam.tasks[0].height = 27
+        error_exam_container.correct_exam.tasks[0].height = 0
         preprocessing_interface.autodetect_expected_answers(error_exam_container)
 
     # Invalid points
