@@ -10,25 +10,25 @@ from base64converter import convert_base64_pdf_to_base_64_img
 app = Flask(__name__)
 
 
-@app.route('/', methods=["POST"])
-def api():
+@app.route('/analyze_correct_exam/', methods=["POST"])
+def analyze_correct_exams():
     """
-    Backend for image selection.
-    Recives a information from the frontend as json
-    The json should have the following contents:
-        tasks: A List of tasks each containing:
-            x: x position of the upper left corner
-            y: y position of the upper left corner
-            width: The width of the crop
-            height: The height of the crop
-        img: The image of the Document as a base64 string.
-        exams: A List of base64 encoded exams.
-            Datatype can be image or application/pdf.
+    Backend for image selection from the correct exam.
+    Return a exam_container that holds the infos.
     """
     exam_container = Exam_container.from_json(json.dumps(request.json))
     exam_container = autodetect_expected_answers(exam_container)
+    return exam_container.to_json()
+
+
+@app.route('/analyze_student_exams/', methods=["POST"])
+def analyze_student_exams():
+    """
+    Backend for the student exams. 
+    Return a exam_container that holds the infos.
+    """
+    exam_container = Exam_container.from_json(json.dumps(request.json))
     exam_container = autocorrect_exams(exam_container)
-    print(exam_container.correct_exam.tasks[0].expected_answer)
     return exam_container.to_json()
 
 

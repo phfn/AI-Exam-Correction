@@ -196,7 +196,7 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 	
 	async function sendToBackend(){
     	setSubmitText("...")
-		let response = await fetch("/web-backend/",
+		let response = await fetch("/web-backend/analyze_correct_exam/",
 			{
 				method: 'POST',
 				headers:{
@@ -212,6 +212,26 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
         setExamContainer(ExamContainer.fromJSON(examContainer_json))
 		setReviewing(true)
 	}
+
+    async function btn_next(){
+
+    	setSubmitText("...")
+		let response = await fetch("/web-backend/analyze_student_exams/",
+			{
+				method: 'POST',
+				headers:{
+					'Content-Type': 'application/json'
+				},
+                body: JSON.stringify(examContainer)
+			})
+		if(!response.ok){
+			setSubmitText("failed to reach the backend")
+		}
+		let examContainer_json = await response.json()
+        setSubmitText("Successful")
+        setExamContainer(ExamContainer.fromJSON(examContainer_json))
+        leave()
+    }
 
 
     
@@ -245,15 +265,15 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
                 <div className={"column column-right"}>
 				<button onClick={() => AddOnClick()} disabled={!IsAddEnabled()}>Add</button>
 				<TaskEditingAreas tasks={exam.tasks} setTasks={setTasks} loadCroppingArea={loadTaskInCroppingArea} deleteTask={deleteTask} saveCropInTask={(index) => {saveCropInExistingTask(index, crop)}} editing={editing} setEditing={setEditing} canEditAnswer={reviewing}/>
-				{exam.tasks.length>0 && <div>
+				{exam.tasks.length>0 && !reviewing && <div>
                     <button onClick={sendToBackend} >Submit</button><pre>{submitText}</pre>
                 </div>}
-                {reviewing && <div>
+					{reviewing && <div>
                         select documents to correct<br/>
                         <input type="file" accept="image/*,application/pdf" multiple="multiple" onChange={onSelectExams}/>
                     </div>
                 }
-				{reviewing && <button onClick={leave}>Next</button>}
+				{reviewing && examContainer.studentExams.length > 0 && <button onClick={btn_next}>Next</button>}
             </div>}
 
         </div>
