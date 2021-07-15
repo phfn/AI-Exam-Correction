@@ -27,19 +27,24 @@ def autocorrect_exams(exam_container: Exam_container) -> Exam_container:
             if task.type == Task_type.SINGLE_CHOICE:
                 task.actual_answer, img = find_checkboxes(image, roi, task, True)
                 exam.image_modified.paste(img, (task.x, task.y))
+                task = calculate_points_checkbox(task, True)
 
             elif task.type == Task_type.MULTIPLE_CHOICE:
                 task.actual_answer, img = find_checkboxes(image, roi, task, True)
                 exam.image_modified.paste(img, (task.x, task.y))
+                task = calculate_points_checkbox(task, False)
 
             elif task.type == Task_type.NUMBER:
                 task.actual_answer = lettercropping(image, roi, task.type)
+                task = calculate_points_text(task)
 
             elif task.type == Task_type.TEXT:
                 task.actual_answer = lettercropping(image, roi, task.type)
+                task = calculate_points_text(task)
 
             elif task.type == Task_type.TEXT_NO_NUMBERS:
                 task.actual_answer = lettercropping(image, roi, task.type)
+                task = calculate_points_text(task)
 
             elif task.type == Task_type.SHAPE:
                 pass
@@ -67,24 +72,19 @@ def autodetect_expected_answers(exam_container: Exam_container):
         if task_type == Task_type.SINGLE_CHOICE:
             task.expected_answer, img = find_checkboxes(image, roi, task, False)
             exam_container.correct_exam.image_modified.paste(img, (task.x, task.y))
-            task = calculate_points_checkbox(task, True)
 
         elif task_type == Task_type.MULTIPLE_CHOICE:
             task.expected_answer, img = find_checkboxes(image, roi, task, False)
             exam_container.correct_exam.image_modified.paste(img, (task.x, task.y))
-            task = calculate_points_checkbox(task, False)
 
         elif task_type == Task_type.NUMBER:
             task.expected_answer = lettercropping(image, roi, task_type)
-            task = calculate_points_text(task)
 
         elif task_type == Task_type.TEXT:
             task.expected_answer = lettercropping(image, roi, task_type)
-            task = calculate_points_text(task)
 
         elif task_type == Task_type.TEXT_NO_NUMBERS:
             task.expected_answer = lettercropping(image, roi, task_type)
-            task = calculate_points_text(task)
 
         elif task_type == Task_type.SHAPE:
             pass
@@ -96,7 +96,6 @@ def autodetect_expected_answers(exam_container: Exam_container):
 
 
 def calculate_points_checkbox(task: Task, isSingleChoice : bool)-> Task:
-    
     task.points = task.max_points
     if isSingleChoice:
         if task.actual_answer != task.expected_answer:
