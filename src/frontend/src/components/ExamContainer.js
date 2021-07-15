@@ -51,7 +51,7 @@ class Task{
 		this.points = points
 	}
 	clone(){
-		return new Task(this.x, this.y, this.width, this.height, this.type, this.expectedAnswer, this.maxPoints, this.deductionPerError, this.actualAnswer, this.points)
+		return new Task(Number(this.x), Number(this.y), Number(this.width), Number(this.height), this.type, this.expectedAnswer, parseFloat(this.maxPoints), parseFloat(this.deductionPerError), this.actualAnswer, parseFloat(this.points))
 	}
 	static fromJSON(json){
 		return new Task(

@@ -1,6 +1,5 @@
 import './ReviewOverview.css'
-function ReviewOverview({examContainer}){
-    console.log(examContainer)
+function ReviewOverview({examContainer, reviewExam}){
     const formatPoints = (number, max_length) => {
         let str = number.toString()
         let len = max_length - str.length
@@ -18,6 +17,7 @@ function ReviewOverview({examContainer}){
                     <tr>
                         <th>Document</th>
                         <th>Result</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -35,6 +35,7 @@ function ReviewOverview({examContainer}){
                                         {points}/{max}
                                     </div>
                                 </td>
+								<td><button onClick={() => {reviewExam(index)}}>Review</button></td>
                                 </tr>
                         })}
 
@@ -48,7 +49,7 @@ function ReviewOverview({examContainer}){
                 <table>
                     <thead>
                     <tr>
-                        <th>N</th>
+                        <th>№</th>
                         <th>Type</th>
                         <th>ØResult</th>
                     </tr>
@@ -60,7 +61,7 @@ function ReviewOverview({examContainer}){
                             }, 0)
                             let len = examContainer.studentExams.length
                             return <tr key={`exams_tasks ${index}`}>
-                                <td>{index}</td>
+                                <td>{index+1}</td>
                                 <td>
                                     {task.type}
                                 </td>
