@@ -1,3 +1,4 @@
+from typing import Text
 import cv2 as cv
 import numpy as np
 import math
@@ -13,6 +14,8 @@ def lettercropping(image, roi, task_types):
 
     # cut the region of interest
     roim = image[roi[1]:roi[3], roi[0]:roi[2]]
+
+
     # the shape of the ROI
     (width, _, _) = roim.shape
     # from color to grayscale
@@ -43,7 +46,7 @@ def lettercropping(image, roi, task_types):
     letters_as_arrays = []
     for rect in dilate_rectangles:
         letters_as_arrays.append(letters_from_line(thresh1, rect, task_types))
-        letters_as_arrays.append('\n')
+        letters_as_arrays.append(" \n")
 
     str_letters = ""
     for line in letters_as_arrays:
@@ -58,9 +61,28 @@ def letters_from_line(image, roi, task_types):
 
     # get the new region of interesst
     line = image[roi[1]:roi[3], roi[0]:roi[2]]
+    line_heigth, line_width = line.shape[:2]
+    upper_heigth = line_heigth // 3 * 2
+    upper_line = line[0:upper_heigth]
+    
+    upper_heigth, upper_width = upper_line.shape[:2]
+
+
+    # dilate the upper part of the picture
+    kernal = cv.getStructuringElement(cv.MORPH_RECT, ksize=(1, 2 * upper_heigth))
+
+    upper_dilate = cv.dilate(upper_line, kernal, anchor=(0, 2*upper_heigth - 1))
+
+    dilate_line = line.copy()
+
+    dilate_line[0:upper_heigth, 0:upper_width] = upper_dilate
+    
+
+
+
 
     # find the outlaying contours
-    contours, _ = cv.findContours(line.copy(), cv.RETR_EXTERNAL , cv.CHAIN_APPROX_NONE)
+    contours, _ = cv.findContours(dilate_line, cv.RETR_EXTERNAL , cv.CHAIN_APPROX_NONE)
 
     # sorting from left to right 
     cnts = sorted(contours, key=lambda cnt: cv.boundingRect(cnt)[0])
@@ -79,16 +101,27 @@ def letters_from_line(image, roi, task_types):
         image_copy = line.copy()
         image_copy = cv.bitwise_and(image_copy, mask)
         (x,y,w,h) = cv.boundingRect(cnts[i])
+        if line_width * 0.8 < w:
+            continue
         # cut the individual character out of the image
         roi = image_copy[y:y+h, x:x+w]
         _, thresh = cv.threshold(roi, 125,255, cv.THRESH_BINARY)
+        
+        roi_pixels = h * w
+        white_pixels = cv.countNonZero(roi)
+
+        if white_pixels / roi_pixels > 0.75:
+            continue
+
+        thresh = cv.blur(thresh, (5,5))
+
 
         resized = enlarge_image(thresh)
         padded = resized.reshape(-1,28,28)
         padded = padded.astype(np.float32)
 
-        letters.append(pi.ocr_pre(padded, task_types))
-
+        letter = pi.ocr_pre(padded, task_types)
+        letters.append(letter)
 
 
     return letters
@@ -106,7 +139,7 @@ def enlarge_image(image):
         factor = 20.0 / cols
         cols = 20
         rows = int(round(rows * factor))
-        image = cv.resize(image, (cols, rows))
+        image = cv.resize(image, (cols, rows), interpolation=cv.INTER_CUBIC)
     colsPadding = (int(math.ceil((28 - cols) / 2.0)), int(math.floor((28 - cols) / 2.0)))
     rowsPadding = (int(math.ceil((28 - rows) / 2.0)), int(math.floor((28 - rows) / 2.0)))
     image = np.lib.pad(image, (rowsPadding, colsPadding), 'constant')
@@ -129,6 +162,4 @@ def intersection(a,b):
   if w - x >= 0 and h - y >= 0:
       return [x, y, w, h]
   return False
-
-
 
