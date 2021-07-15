@@ -24,6 +24,12 @@
     overflow: auto;
     margin: auto;
 }
+.ReviewOverview tfoot{
+    position: sticky;
+    bottom: 0;
+	background-color: #4a5d66;
+	color: #80ba24;
+}
 .ReviewOverview thead{
     position: sticky;
     top: 0;
@@ -37,7 +43,7 @@
 	color: #80ba24;
 }
 .ReviewOverview tr:nth-child(even){background-color: #f2f2f2;}
-.ReviewOverview tr:hover {background-color: #ddd;}
+.ReviewOverview tbody tr:hover {background-color: #ddd;}
 .ReviewOverview td{
     text-align: center;
 }
