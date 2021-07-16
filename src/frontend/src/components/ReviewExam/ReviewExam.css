@@ -1,5 +1,5 @@
 .hover{
-	border: 5px solid #8C160E;
+	outline: 5px solid #8C160E;
 }
 .answers{
 	display: flex;
@@ -14,5 +14,8 @@
 	margin-right: .5rem;
 }
 .form td{
-	text-align: center;
+	text-align: left;
+}
+.answer{
+	overflow-wrap: break-word;
 }

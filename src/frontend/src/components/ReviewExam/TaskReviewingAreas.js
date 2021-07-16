@@ -1,5 +1,5 @@
 import TaskReviewingArea from "./TaskReviewingArea"
-const TaskReviewingAreas = ({tasks, setTasks, hover}) => {
+const TaskReviewingAreas = ({tasks, setTasks, setHoverIndex}) => {
 
 	let setTask = (index, newTask) => {
 	    let n = tasks.map((task)=>{return task.clone()})
@@ -16,7 +16,8 @@ const TaskReviewingAreas = ({tasks, setTasks, hover}) => {
                         task={task}
                         taskId={index}
                         setTask={(newTask) => {setTask(index, newTask)}}
-						hover={hover}
+						hover={() => {setHoverIndex(index)}}
+						onHoverLeave={() => {setHoverIndex(-1)}}
                     />
             )}
         </div>

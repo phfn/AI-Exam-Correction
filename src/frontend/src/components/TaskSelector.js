@@ -10,6 +10,7 @@ import {ExamContainer, Task} from "./ExamContainer"
 
 function TaskSelector({exam, setExam, examContainer, setExamContainer, setStudentExams, leave}) {
 	const [reviewing, setReviewing] = useState(false)
+	const [hoverIndex, setHoverIndex] = useState(-1)
 
     const [crop, setCrop] = useState({});
     const resetCrop = () =>{
@@ -29,7 +30,7 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 
 
 	let imageElement = (
-		<img ref={imageElementRef} alt={"Please select a file"} id="p1" src={exam.image} className="exame"/>
+		<img ref={imageElementRef} alt={"Correct Exam"} id="p1" src={exam.image} className="exame"/>
 	)
 	let naturalWidth = imageElementRef.current ? imageElementRef.current.naturalWidth : 0
 	let naturalHeight = imageElementRef.current ? imageElementRef.current.naturalHeight : 0
@@ -250,21 +251,25 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
                         height={crop.height}
                         x={crop.x}
                         y={crop.y}
+						className={hoverIndex === index ?" hover" : "no-hover"}
                         />
 					)})}
-					<Cropper
-						disabled={false}
-						crop={crop}
-						component={imageElement}
-						onChange={(newCrop_px)=> {setCrop(newCrop_px)}}
-                        ref={croppingArea}
-					/>
+					{examContainer.correctExam.image
+						? <Cropper
+							disabled={false}
+							crop={crop}
+							component={imageElement}
+							onChange={(newCrop_px)=> {setCrop(newCrop_px)}}
+							ref={croppingArea}
+						/>
+						: <div>Pleas select the corrected Exam from your computer</div>
+					}
 				</div>
 			</div>
             {examContainer.correctExam.image &&
                 <div className={"column column-right"}>
 				<button onClick={() => AddOnClick()} disabled={!IsAddEnabled()}>Add</button>
-				<TaskEditingAreas tasks={exam.tasks} setTasks={setTasks} loadCroppingArea={loadTaskInCroppingArea} deleteTask={deleteTask} saveCropInTask={(index) => {saveCropInExistingTask(index, crop)}} editing={editing} setEditing={setEditing} canEditAnswer={reviewing}/>
+				<TaskEditingAreas tasks={exam.tasks} setTasks={setTasks} loadCroppingArea={loadTaskInCroppingArea} deleteTask={deleteTask} saveCropInTask={(index) => {saveCropInExistingTask(index, crop)}} editing={editing} setEditing={setEditing} canEditAnswer={reviewing} setHoverIndex={setHoverIndex}/>
 				{exam.tasks.length>0 && !reviewing && <div>
                     <button onClick={sendToBackend} >Submit</button><pre>{submitText}</pre>
                 </div>}

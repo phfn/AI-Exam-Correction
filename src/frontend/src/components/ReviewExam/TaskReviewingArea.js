@@ -1,4 +1,4 @@
-const TaskReviewingArea = ({task, setTask, taskId, hover}) => {
+const TaskReviewingArea = ({task, setTask, taskId, hover, onHoverLeave}) => {
 	const setPoints = (points) =>{
 		let n = task.clone()
 		n.points = points
@@ -6,7 +6,7 @@ const TaskReviewingArea = ({task, setTask, taskId, hover}) => {
 	}
 
 	return(
-		<div className={"task"} onMouseOver={()=>{hover(taskId)}}>
+		<div className={"task"} onMouseLeave={onHoverLeave} onMouseOver={()=>{hover(taskId)}}>
 
 		<div className="form" key={"task-form-div"+taskId}>
 			<div className="answers">
@@ -21,8 +21,8 @@ const TaskReviewingArea = ({task, setTask, taskId, hover}) => {
 					</thead>
 					<tbody>
 						<tr>
-							<td>{task.expectedAnswer}</td>
-							<td>{task.actualAnswer}</td>
+							<td className="answer">{task.expectedAnswer}</td>
+							<td className="answer">{task.actualAnswer}</td>
 						</tr>
 					</tbody>
 				</table>

@@ -1,5 +1,5 @@
 import TaskEditingArea from "./TaskEditingArea"
-const TaskEditingAreas = ({tasks, setTasks, loadCroppingArea, deleteTask, saveCropInTask, editing, setEditing, canEditAnswer}) => {
+const TaskEditingAreas = ({tasks, setTasks, loadCroppingArea, deleteTask, saveCropInTask, editing, setEditing, canEditAnswer, setHoverIndex}) => {
 
 	let setTask = (index, newTask) => {
 	    let n = tasks.map((task)=>{return task.clone()})
@@ -22,6 +22,8 @@ const TaskEditingAreas = ({tasks, setTasks, loadCroppingArea, deleteTask, saveCr
                         saveCropInTask={() => {saveCropInTask(index)}}
                         setEditing={setEditing}
                         canEditAnswer={canEditAnswer}
+						onHover={() => {setHoverIndex(index)}}
+						onHoverLeave={() => {setHoverIndex(-1)}}
                     />
             )}
         </div>
