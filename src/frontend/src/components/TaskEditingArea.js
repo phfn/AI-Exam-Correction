@@ -46,7 +46,7 @@ const TaskEditingArea = ({task, taskId, setTask, loadCroppingArea, deleteTask, s
 		{ value: 'number', label: 'Number' , default: '0'},
 		{ value: 'text_no_numbers', label: 'Text without Numbers', default: '0' },
 		{ value: 'single_choice', label: 'Single Choice Checkbox', default: '0' },
-		{ value: 'multiple_choice', label: 'Multiple Choice Checkbox', default: '0' },
+		//{ value: 'multiple_choice', label: 'Multiple Choice Checkbox', default: '0' },
 		]
 	return(
 	<div className={"task"}>
