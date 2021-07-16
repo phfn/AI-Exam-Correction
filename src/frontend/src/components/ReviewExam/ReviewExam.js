@@ -78,9 +78,6 @@ function ReviewExam({exam, setExam, goBack}) {
 
 		return convertToPixelCrop({x: x, y:y, width: width, height: height, unit: "%"})
 	}
-	const onHover = (index) =>{
-		setHoverIndex(index)
-	}
 
 			
     return (
@@ -106,7 +103,7 @@ function ReviewExam({exam, setExam, goBack}) {
 					Go Back
 				</button>
 			<div className={"column column-right"}>
-					<TaskReviewingAreas tasks={exam.tasks} setTasks={setTasks} hover={onHover}/>
+					<TaskReviewingAreas tasks={exam.tasks} setTasks={setTasks} setHoverIndex={setHoverIndex}/>
 			</div>
 
         </div>)
