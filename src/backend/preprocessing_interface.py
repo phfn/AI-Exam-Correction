@@ -5,7 +5,7 @@ from PIL import Image
 from Exam_container import Exam_container
 from task_types import Task_type
 from checkboxchecker import find_checkboxes
-from letterdetection import lettercropping
+from letterdetection import letter_slicer
 from Task import Task
 from PIL import Image
 Image.MAX_IMAGE_PIXELS = None
@@ -35,15 +35,15 @@ def autocorrect_exams(exam_container: Exam_container) -> Exam_container:
                 task = calculate_points_checkbox(task, False)
 
             elif task.type == Task_type.NUMBER:
-                task.actual_answer = lettercropping(image, roi, task.type)
+                task.actual_answer = letter_slicer(image, roi, task.type)
                 task = calculate_points_text(task)
 
             elif task.type == Task_type.TEXT:
-                task.actual_answer = lettercropping(image, roi, task.type)
+                task.actual_answer = letter_slicer(image, roi, task.type)
                 task = calculate_points_text(task)
 
             elif task.type == Task_type.TEXT_NO_NUMBERS:
-                task.actual_answer = lettercropping(image, roi, task.type)
+                task.actual_answer = letter_slicer(image, roi, task.type)
                 task = calculate_points_text(task)
 
             elif task.type == Task_type.SHAPE:
@@ -78,13 +78,13 @@ def autodetect_expected_answers(exam_container: Exam_container):
             exam_container.correct_exam.image_modified.paste(img, (task.x, task.y))
 
         elif task_type == Task_type.NUMBER:
-            task.expected_answer = lettercropping(image, roi, task_type)
+            task.expected_answer = letter_slicer(image, roi, task_type)
 
         elif task_type == Task_type.TEXT:
-            task.expected_answer = lettercropping(image, roi, task_type)
+            task.expected_answer = letter_slicer(image, roi, task_type)
 
         elif task_type == Task_type.TEXT_NO_NUMBERS:
-            task.expected_answer = lettercropping(image, roi, task_type)
+            task.expected_answer = letter_slicer(image, roi, task_type)
 
         elif task_type == Task_type.SHAPE:
             pass

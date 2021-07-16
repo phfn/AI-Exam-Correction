@@ -7,27 +7,40 @@ import predict_interface as pi
 from task_types import Task_type
 
 
-def lettercropping(image, roi, task_types):
+def letter_slicer(image, roi, task_types):
+    ''' 
+    This function is used to find letters and return them as a string.
 
+    Parameters:
+        image (opencv image): The picture or image to get analysed
+        roi (list): the region of interest inside the given picture
+        task_types(Task_types): this will be given to the KI interface
+    '''
     # minimal letter hight
-    min_letter = 28
+    min_letter = (28 / 1654) * image.shape[1]
+    erosion_val = int(abs(min_letter / 14))
+
+    erosion_val = erosion_val if erosion_val > 0 else 1
 
     # cut the region of interest
     roim = image[roi[1]:roi[3], roi[0]:roi[2]]
 
 
     # the shape of the ROI
-    (width, _, _) = roim.shape
+    heigth = roim.shape[0]
     # from color to grayscale
     gray = cv.cvtColor(roim, cv.COLOR_BGR2GRAY)
     # threshold the picture to get the inverted colors with out error pixels
-    _, thresh1 = cv.threshold(gray.copy(), 0, 225, cv.THRESH_OTSU | cv.THRESH_BINARY_INV)
+    _, thresh1 = cv.threshold(gray.copy(), 125, 225, cv.THRESH_OTSU | cv.THRESH_BINARY_INV)
+    # for better seperation of the letters first a little erode
+    erode_kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (erosion_val, erosion_val))
+    erosion = cv.erode(thresh1, erode_kernel)
 
     # now get the seperated lines
-    rect_kernal = cv.getStructuringElement(cv.MORPH_RECT, (width,1))
+    rect_kernal = cv.getStructuringElement(cv.MORPH_RECT, (heigth * 2 ,1))
 
     # dilate all pixels to left and right so I can seperate the lines. 
-    dilatation = cv.dilate(thresh1,rect_kernal,iterations=3)
+    dilatation = cv.dilate(erosion,rect_kernal)
 
     # finding the contours of the dilated lines
     dilate_cont, dilate_hierachy = cv.findContours(dilatation.copy(), cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
@@ -45,8 +58,8 @@ def lettercropping(image, roi, task_types):
     # list for the 28*28 letters
     letters_as_arrays = []
     for rect in dilate_rectangles:
-        letters_as_arrays.append(letters_from_line(thresh1, rect, task_types))
-        letters_as_arrays.append(" \n")
+        letters_as_arrays.append(letters_from_line(thresh1, rect, task_types, erosion_val))
+        letters_as_arrays.append(" ")
 
     str_letters = ""
     for line in letters_as_arrays:
@@ -57,13 +70,23 @@ def lettercropping(image, roi, task_types):
 
 # -----------------------------------------------------------------------
 
-def letters_from_line(image, roi, task_types):
+""" returns the letters from the given line """
+def letters_from_line(image, roi, task_types, erosion_val):
+    '''
+    After the roi of the image has been seperated into several lines
+    this function will 
+    '''
 
     # get the new region of interesst
     line = image[roi[1]:roi[3], roi[0]:roi[2]]
     line_heigth, line_width = line.shape[:2]
+
+    # erode the picture again so th contours will be sharper
+    erode_kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (erosion_val, erosion_val))
+    erosion = cv.erode(line, erode_kernel)
+    # cut the upper part of the picture to dilate it downwards
     upper_heigth = line_heigth // 3 * 2
-    upper_line = line[0:upper_heigth]
+    upper_line = erosion[0:upper_heigth]
     
     upper_heigth, upper_width = upper_line.shape[:2]
 
@@ -71,22 +94,32 @@ def letters_from_line(image, roi, task_types):
     # dilate the upper part of the picture
     kernal = cv.getStructuringElement(cv.MORPH_RECT, ksize=(1, 2 * upper_heigth))
 
-    upper_dilate = cv.dilate(upper_line, kernal, anchor=(0, 2*upper_heigth - 1))
+    upper_dilate = cv.dilate(upper_line, kernal, anchor=(0, 2 * upper_heigth - 1))
 
-    dilate_line = line.copy()
+    dilate_line = erosion.copy()
 
     dilate_line[0:upper_heigth, 0:upper_width] = upper_dilate
     
-
-
-
-
+    # give the image some blur so all parts should stick together
+    dilate_line = cv.blur(dilate_line,(5,5))
     # find the outlaying contours
     contours, _ = cv.findContours(dilate_line, cv.RETR_EXTERNAL , cv.CHAIN_APPROX_NONE)
-
+    
     # sorting from left to right 
     cnts = sorted(contours, key=lambda cnt: cv.boundingRect(cnt)[0])
+    f = lambda x, y: abs(x-y)
+    rectangles = [cv.boundingRect(x) for x in cnts]
 
+    # for seperating the letters
+    mean, sigma = mean_and_std_deviation(cnts, image.shape[1])
+
+    # sadly I cant return the list from the function without an error. IDK y so I have to recalc it here. 
+    dist = []
+    for i in range(len(rectangles)-1):
+        dist.append(abs(rectangles[i+1][0] - (rectangles[i][0] + rectangles[i][2])))
+    dist.append(0)
+    dist = [x if x < dilate_line.shape[1] * 0.6 else mean for x in dist ]
+    
     # list for the found letter in 28*28 pixels
     letters = []
 
@@ -110,24 +143,55 @@ def letters_from_line(image, roi, task_types):
         roi_pixels = h * w
         white_pixels = cv.countNonZero(roi)
 
+        # dots will be ignored
         if white_pixels / roi_pixels > 0.75:
             continue
-
+        
+        # a nice blur so the pictures of the letters are smoother
         thresh = cv.blur(thresh, (5,5))
 
 
         resized = enlarge_image(thresh)
         padded = resized.reshape(-1,28,28)
         padded = padded.astype(np.float32)
-
+        # send the preprocesssed pictures to the KI interface
         letter = pi.ocr_pre(padded, task_types)
         letters.append(letter)
+        # trying to seperate the words. still not working perfect but still better than before
+        if dist[i] > mean + sigma:
+            letters.append(" ")
 
 
     return letters
 
 # -----------------------------------------------------------------------
 
+""" Gauss-distribution """
+def mean_and_std_deviation(contours, width):
+    # there is none if there are less than 2 items
+    if len(contours) <= 2: return 0,0
+
+    # get the rectangle for each contour
+    rectangles = [cv.boundingRect(x) for x in contours]
+    rectangles_dist = []
+    # get the absolute distance between following rectangles
+    for i in range(len(rectangles)-1):
+        rectangles_dist.append(abs(rectangles[i+1][0] - (rectangles[i][0] + rectangles[i][2])))
+    rectangles_dist = [x if x < width * 0.6 else 1 for x in rectangles_dist]
+    
+    # calc the mean
+    rects_len = len(rectangles)
+    mean = sum(rectangles_dist) / rects_len
+    # calc the varianz and return the sqrt
+    f = lambda x : (x - mean)**2
+    varianz = sum([f(x) for x in rectangles_dist]) / (rects_len - 1)
+    rectangles_dist.append(0)
+    return mean, varianz**0.5
+
+
+# -----------------------------------------------------------------------
+
+""" please move this function to the KI Interface """
 def enlarge_image(image):
     rows, cols = image.shape
     if rows > cols:
@@ -143,23 +207,10 @@ def enlarge_image(image):
     colsPadding = (int(math.ceil((28 - cols) / 2.0)), int(math.floor((28 - cols) / 2.0)))
     rowsPadding = (int(math.ceil((28 - rows) / 2.0)), int(math.floor((28 - rows) / 2.0)))
     image = np.lib.pad(image, (rowsPadding, colsPadding), 'constant')
-    return image
+    padded = image.reshape(-1,28,28)
+    padded = padded.astype(np.float32)
+
+    return padded
 
 # -----------------------------------------------------------------------
-
-def union(a,b):
-  x = min(a[0], b[0])
-  y = min(a[1], b[1])
-  w = max(a[0], b[2])
-  h = max(a[3], b[3])
-  return [x, y, w, h]
-
-def intersection(a,b):
-  x = max(a[0], b[0])
-  y = max(a[1], b[1])
-  w = min(a[2], b[2])
-  h = min(a[3], b[3])
-  if w - x >= 0 and h - y >= 0:
-      return [x, y, w, h]
-  return False
 

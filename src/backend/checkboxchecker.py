@@ -8,51 +8,18 @@ This function will accept a picture as a numpy array.
 You can load a picture as an array by using imageio.
 
 '''
-# get the big boxes out the little ones. 
-def __checkbox_checker(boxes):
-    if len(boxes) <= 1:
-        return boxes
-    tempbox = []
-# checking if any boxes are intersecting to make big boxes out of them. 
-    for box in boxes:
-        add = True
-        for rec in boxes:
-            t = intersection(box, rec)
-            if t == None or (t[0] == rec[0] and t[1] == rec[1] and t[2] == rec[2] and t[3] == rec[3]):
-                continue
-            else:
-                box = union(box, rec)
-                add = False
-        if add:
-            tempbox.append(box)
-    sorted(tempbox)
-    newbox = list(tempbox for tempbox,_ in itertools.groupby(tempbox))
-
-    return newbox
-
-# combines two rectangels to a bigger one. 
-def union(a,b):
-  x = min(a[0], b[0])
-  y = min(a[1], b[1])
-  w = max(a[0], b[2])
-  h = max(a[3], b[3])
-  return [x, y, w, h]
-
-# function to check if two rectangels are intersecting. 
-# the return value of x,y,w,h is just to be able to make something else with thie function.
-def intersection(a,b):
-  x = max(a[0], b[0])
-  y = max(a[1], b[1])
-  w = min(a[2], b[2])
-  h = min(a[3], b[3])
-  if w - x >= 0 and h - y >= 0:
-      return [x, y, w, h]
-  return
 
 def find_checkboxes(picture, roi, task:Task, correcting:bool): 
     red = (0,0,255)
     green = (0,255,0)
     blue = (255,0,0)
+
+    dynamic_thickness = (2 / 1654) * picture.shape[1]
+    line_thickness = int(abs(dynamic_thickness))
+    # line_thickness = line_thickness if line_thickness > 1 else 2
+    line_thickness = (2, line_thickness)[line_thickness > 1]
+    font_scale = 0.9 * line_thickness
+
     # cut the roi
     roim = picture[roi[1]:roi[3], roi[0]:roi[2]]
     image = roim.copy()
@@ -61,6 +28,7 @@ def find_checkboxes(picture, roi, task:Task, correcting:bool):
     drawing = image.copy()
 
     gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    gray = cv.blur(gray, (5,5))
 
     _, bin_img = cv.threshold(gray, 120, 255,  cv.THRESH_OTSU)
     bin_img = ~bin_img
@@ -103,24 +71,25 @@ def find_checkboxes(picture, roi, task:Task, correcting:bool):
         if correcting:
             # correct answer
             if i in expected and i in crossed_boxes:
-                cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), green,2)
-                cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, 0.9, green, 2) 
+                cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), green, line_thickness)
+                cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, font_scale, green, line_thickness) 
             # checkbox missed 
             elif i in expected and i not in crossed_boxes:
-                cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), red,2)
-                cv.putText(drawing, 'x', (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, 0.9, red, 2) 
+                cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), red, line_thickness)
+                cv.putText(drawing, 'x', (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, font_scale, red, line_thickness) 
             # wring checkbox
             elif i not in expected and i in crossed_boxes:
-                cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), red,2)
-                cv.putText(drawing, '_', (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, 2, red, 2) 
+                cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), red, line_thickness)
+                cv.putText(drawing, '_', (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, 2, red, line_thickness) 
             # not wrong just empty or filled
             else:
-                cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), blue,2)
-                cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, 0.9, blue, 2) 
+                cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), blue, line_thickness)
+                cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, font_scale, blue, line_thickness) 
         else:
-            cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), blue,2)
-            cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, 0.9, green, 2) 
+            cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), blue, line_thickness)
+            cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, font_scale, green, line_thickness) 
         i += 1
+
     drawing = cv.cvtColor(drawing, cv.COLOR_RGB2BGR)
     drawing = Image.fromarray(drawing)
     my_answer = [str(i) for i in crossed_boxes]
@@ -152,3 +121,51 @@ def countCheckboxPixels(checkbox, img):
 
 def sortCheckboxes(boxes):
     return sorted(boxes, key=lambda box: [box[1], box[0]])
+
+# get the big boxes out the little ones. 
+def __checkbox_checker(boxes):
+    if len(boxes) <= 1:
+        return boxes
+    tempbox = []
+# checking if any boxes are intersecting to make big boxes out of them. 
+    for box in boxes:
+        add = True
+        for rec in boxes:
+            t = intersection(box, rec)
+            if t == None or (t[0] == rec[0] and t[1] == rec[1] and t[2] == rec[2] and t[3] == rec[3]):
+                continue
+            else:
+                box = union(box, rec)
+                add = False
+        if add:
+            tempbox.append(box)
+    sorted(tempbox)
+    newbox = list(tempbox for tempbox,_ in itertools.groupby(tempbox))
+
+    return newbox
+
+# combines two rectangels to a bigger one. 
+def union(a,b):
+  x = min(a[0], b[0])
+  y = min(a[1], b[1])
+  w = max(a[0], b[2])
+  h = max(a[3], b[3])
+  return [x, y, w, h]
+
+# function to check if two rectangels are intersecting. 
+# the return value of x,y,w,h is just to be able to make something else with thie function.
+def intersection(a,b):
+  x = max(a[0], b[0])
+  y = max(a[1], b[1])
+  w = min(a[2], b[2])
+  h = min(a[3], b[3])
+  if w - x >= 0 and h - y >= 0:
+      return [x, y, w, h]
+  return
+
+
+
+
+
+
+
