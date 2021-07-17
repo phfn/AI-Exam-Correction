@@ -158,7 +158,11 @@ def letters_from_line(image, roi, task_types, erosion_val):
         letter = pi.ocr_pre(padded, task_types)
         letters.append(letter)
         # trying to seperate the words. still not working perfect but still better than before
-        if dist[i] > mean + sigma:
+        mean_sigma = mean + sigma 
+        mean_srq = mean + mean 
+        calc_max_dist = mean_sigma if mean_sigma > mean_srq else mean_srq
+
+        if dist[i] > calc_max_dist:
             letters.append(" ")
 
 
