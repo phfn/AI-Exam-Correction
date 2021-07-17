@@ -151,9 +151,8 @@ def letters_from_line(image, roi, task_types, erosion_val):
         thresh = cv.blur(thresh, (5,5))
 
 
-        resized = enlarge_image(thresh)
-        padded = resized.reshape(-1,28,28)
-        padded = padded.astype(np.float32)
+        padded = enlarge_image(thresh)
+
         # send the preprocesssed pictures to the KI interface
         letter = pi.ocr_pre(padded, task_types)
         letters.append(letter)
