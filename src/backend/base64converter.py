@@ -15,7 +15,8 @@ def base_64_to_PIL_Image(img_64: str) -> Image.Image:
     img_bytes = b64decode(img_64.split(",")[1])
     img_buf = BytesIO(img_bytes)
     img_pil = Image.open(img_buf)
-
+    if len(img_pil.getbands()) < 3:
+        img_pil = img_pil.convert("RGB")
     return img_pil
 
 
