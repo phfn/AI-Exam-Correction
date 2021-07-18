@@ -10,6 +10,11 @@ pip install -r requirements.txt
 ```
 Also [poppler](https://gitlab.freedesktop.org/poppler/poppler/) is required. There is an Debian package "poppler-utils", which make installing relatively easy.
 
+The installation of the Google Tesseract OCR Engine is also required before installing other tools.
+This doesn't happen via the pip command but must be installed in local system.
+After the google tesseract-ocr and other requirements are installed , languages in backend folder "./docs/lang" muss be added
+to the tesseract languages folder "tessdata".
+The path where it can be found starts with /usr/share/ or /usr/local/share. <br> 
 ## Start dev
 
 While development you can start the server, by just calling:
