@@ -3,8 +3,8 @@ import cv2 as cv
 import numpy as np
 import math
 from numpy.lib.function_base import append
-import predict_interface as pi
 from task_types import Task_type
+from predict_interface import *
 
 
 def letter_slicer(image, roi, task_types):
@@ -154,7 +154,7 @@ def letters_from_line(image, roi, task_types, erosion_val):
         padded = enlarge_image(thresh)
 
         # send the preprocesssed pictures to the KI interface
-        letter = pi.ocr_pre(padded, task_types)
+        letter = ocr_pre(padded, task_types)
         letters.append(letter)
         # trying to seperate the words. still not working perfect but still better than before
         mean_sigma = mean + sigma 
@@ -191,29 +191,4 @@ def mean_and_std_deviation(contours, width):
     rectangles_dist.append(0)
     return mean, varianz**0.5
 
-
-# -----------------------------------------------------------------------
-
-""" please move this function to the KI Interface """
-def enlarge_image(image):
-    rows, cols = image.shape
-    if rows > cols:
-        factor = 20.0 / rows
-        rows = 20
-        cols = int(round(cols * factor))
-        image = cv.resize(image, (cols, rows))
-    else:
-        factor = 20.0 / cols
-        cols = 20
-        rows = int(round(rows * factor))
-        image = cv.resize(image, (cols, rows), interpolation=cv.INTER_CUBIC)
-    colsPadding = (int(math.ceil((28 - cols) / 2.0)), int(math.floor((28 - cols) / 2.0)))
-    rowsPadding = (int(math.ceil((28 - rows) / 2.0)), int(math.floor((28 - rows) / 2.0)))
-    image = np.lib.pad(image, (rowsPadding, colsPadding), 'constant')
-    padded = image.reshape(-1,28,28)
-    padded = padded.astype(np.float32)
-
-    return padded
-
-# -----------------------------------------------------------------------
 

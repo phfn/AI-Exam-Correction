@@ -1,0 +1,137 @@
+#!/usr/bin/python3
+
+import os
+
+import tensorflow as tf
+import numpy as np
+import pandas as pd
+from random import randint
+import matplotlib.pyplot as plt
+from tensorflow.python.keras.layers.core import Dropout
+keras = tf.keras
+
+""" loads each data from emnist digit dataset. The csv mapp file for future predictions is also read. """
+def load_mnist():
+    test = pd.read_csv("docs/emnist-digits-test.csv", delimiter= ',')
+    train = pd.read_csv("docs/emnist-digits-train.csv", delimiter= ',')
+    mapp = [i for i in range(10)]
+    return test, train, mapp
+
+""" 
+    extracts respectively the test and the train datas from the emnist-digit csv file. 
+    The Labels of both sets are extracted from the first column of the emnist csv file.
+    The proper datas of the both sets are extracted from the first to the last column of the emnist csv file.
+    both sets are transformed as arrays to make future datas reshaping possible.
+    returns extracted datas and labels of the train and test set respectively. 
+"""
+def extract_datas(test, train): 
+    test_data = test.iloc[:, 1:]
+    test_label = np.array(test.iloc[:, 0].values)
+
+    train_data = train.iloc[:, 1:]
+    train_label = np.array(train.iloc[:, 0].values)
+
+    print(train_data.shape,train_label.shape,test_data.shape,test_label.shape)
+    print('\n')
+
+    train_data = np.array(train_data)
+    test_data = np.array(test_data)
+
+    return (train_data, train_label), (test_data, test_label)
+
+""" reshapes each data array and downscales the images pixels for a better training with CNN. """
+def image_preprocessing(train_data, test_data):
+    #reshape each image of train and test set
+    train_data = train_data.reshape(239999, 28, 28)
+    train_data = [np.fliplr(image) for image in train_data] 
+    train_data = [np.rot90(image) for image in train_data]
+    train_data = np.asarray(train_data)
+
+    test_data = test_data.reshape(39999, 28, 28)
+    test_data = [np.fliplr(image) for image in test_data]
+    test_data = [np.rot90(image) for image in test_data]
+    test_data = np.asarray(test_data)
+
+    train_data = train_data.astype('float32')
+    test_data = test_data.astype('float32')
+
+    # downscale image pixels from [0, 255] to [0, 1]
+    train_data /= 255.0
+    test_data /= 255.0
+
+    print(train_data.shape, test_data.shape)
+    return train_data, test_data
+
+""" plots some sample images. """
+def plot_sample_images(data, label, mapp):
+    plt.figure(figsize = (10,10))
+    row, colums = 4, 4
+    for i in range(16):
+        plt.subplot(colums, row, i+1)
+        index = randint(0, len(data))
+        plt.savefig("plot_pics/mnist_plot")
+        plt.imshow(data[index], cmap='gray_r')
+#        num = int(label[index])
+#        print(num)
+        plt.title(int(label[index]))
+    plt.show()
+
+
+""" builds and train the CNN Network to get a performant model for future predictions. """
+def train_mnist():
+    train, test, mapp = load_mnist()
+    (train_data, train_label), (test_data, test_label) = extract_datas(train, test)
+    train_data, test_data = image_preprocessing(train_data, test_data)
+    plot_sample_images(train_data, train_label, mapp)
+
+    model = keras.Sequential([
+        keras.layers.Flatten(input_shape=(28, 28)), 
+        keras.layers.Dense(512, activation='relu'),
+        keras.layers.Dense(512, activation='relu'), # relu f(x) = max(0, x). x = input. if (x<0) the x = 0. Else x = x
+        keras.layers.Dense(10, activation='softmax')
+    ])
+
+    model.compile(optimizer='adam',
+                loss='sparse_categorical_crossentropy',
+                metrics=['accuracy'])
+
+    history = model.fit(train_data, train_label, epochs=10, validation_data=(test_data, test_label))
+
+    test_loss, test_acc = model.evaluate(test_data,  test_label)
+
+    print('Test accuracy:', test_acc)
+
+    #saving the model
+    save_dir = "results"
+    model_name = "trained_mnist_model"
+    model_path = os.path.join(save_dir, model_name)
+    model.save(model_path)
+    print('saved trained model at %s ', model_path)
+
+    prediction = model.predict(test_data)
+    return history, test_data, test_label
+
+def plot_metrics(history, test_data, test_label):
+    fig = plt.figure()
+    plt.subplot(2,1,1)
+    plt.plot(history.history['accuracy'])
+    plt.plot(history.history['val_accuracy'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='lower right')
+    plt.show()
+
+    plt.subplot(2,1,2)
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss']) 
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper right')  
+    plt.show()
+
+    plt.tight_layout()
+    loss_and_metrics = model.evaluate(test_data, test_label, verbose=2)
+
+train_mnist()
