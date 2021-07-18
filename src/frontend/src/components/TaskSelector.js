@@ -262,7 +262,7 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 							onChange={(newCrop_px)=> {setCrop(newCrop_px)}}
 							ref={croppingArea}
 						/>
-						: <div>Pleas select the corrected Exam from your computer</div>
+						: <div>Please select the corrected Exam from your computer</div>
 					}
 				</div>
 			</div>
