@@ -105,11 +105,13 @@ def calculate_points_checkbox(task: Task, isSingleChoice : bool)-> Task:
             task.points = 0
         else: 
             for index, answer in enumerate(task.expected_answer.split(",")):
-                if answer != task.actual_answer[index]:
-                    task.points -= task.deduction_per_error
-                if index > len(task.actual_answer):
+                if index >= len(task.actual_answer):
                     task.points -= len(task.expected_answer) - len(task.actual_answer)
                     break
+                if answer != task.actual_answer[index]:
+                    task.points -= task.deduction_per_error
+
+    if task.points < 0: task.points = 0
     return task
 
 def calculate_points_text(task: Task)-> Task:
@@ -118,11 +120,12 @@ def calculate_points_text(task: Task)-> Task:
         task.points = 0
     else :
         for index, answer in enumerate(list(task.expected_answer)):
-            if answer != task.actual_answer[index]:
-                task.points -= task.deduction_per_error
-            if index > len(task.actual_answer):
+            if index >= len(task.actual_answer):
                 task.points -= len(task.expected_answer) - len(task.actual_answer)
                 break
+            if answer != task.actual_answer[index]:
+                task.points -= task.deduction_per_error
+    if task.points < 0: task.points = 0
     return task
     
 
