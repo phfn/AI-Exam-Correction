@@ -41,7 +41,7 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 */
 function _convertToPercentCrop(crop, imageWidth, imageHeight) {
 	if (crop.unit === '%') {
-		return crop;
+		return crop
 	}
 
 	return {
@@ -51,16 +51,16 @@ function _convertToPercentCrop(crop, imageWidth, imageHeight) {
 		y: (crop.y / imageHeight) * 100,
 		width: (crop.width / imageWidth) * 100,
 		height: (crop.height / imageHeight) * 100,
-	};
+	}
 }
 
 function _convertToPixelCrop(crop, imageWidth, imageHeight) {
 	if (!crop.unit) {
-		return { ...crop, unit: 'px' };
+		return { ...crop, unit: 'px' }
 	}
 
 	if (crop.unit === 'px') {
-		return crop;
+		return crop
 	}
 
 	return {
@@ -70,5 +70,5 @@ function _convertToPixelCrop(crop, imageWidth, imageHeight) {
 		y: (crop.y * imageHeight) / 100,
 		width: (crop.width * imageWidth) / 100,
 		height: (crop.height * imageHeight) / 100,
-	};
+	}
 }

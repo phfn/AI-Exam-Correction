@@ -1,7 +1,7 @@
 import React from 'react'
-import Cropper from "./Cropper";
-import TaskEditingAreas from "./TaskEditingAreas";
-import Rectangle from "./Rectangle";
+import Cropper from "./Cropper"
+import TaskEditingAreas from "./TaskEditingAreas"
+import Rectangle from "./Rectangle"
 import {useRef, useState} from 'react'
 import './TaskSelector.css'
 import {ExamContainer, Task} from "./ExamContainer"
@@ -14,7 +14,7 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 	const [reviewing, setReviewing] = useState(false)
 	const [hoverIndex, setHoverIndex] = useState(-1)
 
-	const [crop, setCrop] = useState({});
+	const [crop, setCrop] = useState({})
 	const resetCrop = () =>{
 		setCrop({...crop, x:0, y: 0, width: 0, height: 0})
 	}
@@ -99,7 +99,7 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 			})
 			.then((json)=> { setExamImage(json.img) })
 			.catch( (err) => {
-				console.log("that didnt work" + err);
+				console.log("that didnt work" + err)
 				alert("Beim Konvertieren ist leider etwas schief gegangen :/")
 			})
 	}
@@ -113,13 +113,13 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 			let file = e.target.files[0]
 			if (file.type === "application/pdf"){
 				//convert
-				const reader = new FileReader();
-				reader.addEventListener('load', () => setPdfAsImage(reader.result));
-				reader.readAsDataURL(file);
+				const reader = new FileReader()
+				reader.addEventListener('load', () => setPdfAsImage(reader.result))
+				reader.readAsDataURL(file)
 			}else{
-				const reader = new FileReader();
-				reader.addEventListener('load', () => setExamImage(reader.result));
-				reader.readAsDataURL(file);
+				const reader = new FileReader()
+				reader.addEventListener('load', () => setExamImage(reader.result))
+				reader.readAsDataURL(file)
 			}
 		}
 	}
@@ -127,20 +127,20 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 
 	const handleFileChosen = async (file) => {
 		return new Promise((resolve, reject) => {
-			let fileReader = new FileReader();
+			let fileReader = new FileReader()
 			fileReader.onload = () => {
-				resolve(fileReader.result);
-			};
-			fileReader.onerror = reject;
-			fileReader.readAsDataURL(file);
-		});
+				resolve(fileReader.result)
+			}
+			fileReader.onerror = reject
+			fileReader.readAsDataURL(file)
+		})
 	}
 
 	const onSelectExams = async (e) => {
 		let files = [...e.target.files]
 		const results = await Promise.all( files.map( async (file) => {
-			const fileContents = await handleFileChosen(file);
-			return fileContents;
+			const fileContents = await handleFileChosen(file)
+			return fileContents
 		}) )
 		let filenames = files.map((file)=>{
 			return file.name
@@ -234,7 +234,7 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 				</div>}
 
 		</div>
-	);
+	)
 }
 
-export default TaskSelector;
+export default TaskSelector

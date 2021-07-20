@@ -1,5 +1,6 @@
 {
     "env": {
+        "node": true,
         "browser": true,
         "es2021": true
     },
@@ -21,7 +22,8 @@
         "indent": ["error", "tab"],
         "react/prop-types": [0],
         "no-trailing-spaces": ["warn"],
-        "no-unused-vars": ["warn"]
+        "no-unused-vars": ["warn"],
+        "semi": ["warn", "never"]
     },
     "settings":{
       "react":{

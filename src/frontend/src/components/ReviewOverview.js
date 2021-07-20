@@ -1,7 +1,7 @@
 import './ReviewOverview.css'
 import {React, useState} from "react"
 function ReviewOverview({examContainer, reviewExam}){
-	let userLang = navigator.language || navigator.userLanguage;
+	let userLang = navigator.language || navigator.userLanguage
 	let isGerman = userLang.toUpperCase() === "de-DE".toUpperCase() || userLang.toUpperCase() === "DE"
 	const [delimiter, setDelimiter] = useState(
 		//exels parses diffrent in diffrent language settings
@@ -14,17 +14,17 @@ function ReviewOverview({examContainer, reviewExam}){
 		return str
 	}
 	const downloadFile = (blob, fileName) => {
-		const link = document.createElement('a');
+		const link = document.createElement('a')
 		// create a blobURI pointing to our Blob
-		link.href = URL.createObjectURL(blob);
-		link.download = fileName;
+		link.href = URL.createObjectURL(blob)
+		link.download = fileName
 		// some browser needs the anchor to be in the doc
-		document.body.append(link);
-		link.click();
-		link.remove();
+		document.body.append(link)
+		link.click()
+		link.remove()
 		// in case the Blob uses a lot of memory
-		setTimeout(() => URL.revokeObjectURL(link.href), 7000);
-	};
+		setTimeout(() => URL.revokeObjectURL(link.href), 7000)
+	}
 
 	const downloadCsv = () => {
 

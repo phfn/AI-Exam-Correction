@@ -1,7 +1,7 @@
-import Rectangle from "../Rectangle";
+import Rectangle from "../Rectangle"
 import {React, useRef, useState} from 'react'
 import "../TaskSelector.css"
-import TaskReviewingAreas from "./TaskReviewingAreas";
+import TaskReviewingAreas from "./TaskReviewingAreas"
 import "./ReviewExam.css"
 import {convertNaturalToCrop as _convertNaturalToCrop} from '../CropConverter'
 
@@ -50,4 +50,4 @@ function ReviewExam({exam, setExam, goBack}) {
 
 		</div>)
 }
-export default ReviewExam;
+export default ReviewExam

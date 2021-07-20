@@ -1,11 +1,11 @@
-import TaskSelector from './TaskSelector';
-import ReviewOverview from './ReviewOverview';
-import Header from './Header';
-import Footer from './Footer';
-import {React, useState} from "react";
-import sampleExamContainer from '../SampleDocument';
-import {ExamContainer, Exam} from "./ExamContainer";
-import ReviewExam from "./ReviewExam/ReviewExam";
+import TaskSelector from './TaskSelector'
+import ReviewOverview from './ReviewOverview'
+import Header from './Header'
+import Footer from './Footer'
+import {React, useState} from "react"
+import sampleExamContainer from '../SampleDocument'
+import {ExamContainer, Exam} from "./ExamContainer"
+import ReviewExam from "./ReviewExam/ReviewExam"
 
 const App = () => {
 	const [examContainer, setExamContainer] = useState(
@@ -29,18 +29,18 @@ const App = () => {
 					<TaskSelector
 						exam = {examContainer.correctExam}
 						setExam={(exam) => {
-							let n = examContainer.clone();
-							n.correctExam = exam;
+							let n = examContainer.clone()
+							n.correctExam = exam
 							setExamContainer(n)
 						}}
 						examContainer={examContainer}
 						setExamContainer={setExamContainer}
 						setStudentExams={(examImages, filenames) => {
-							let n = examContainer.clone();
+							let n = examContainer.clone()
 							n.studentExams = examImages.map((image, index) => {
 								return new Exam(image, filenames[index], examContainer.correctExam.tasks)
-							});
-							setExamContainer(n);
+							})
+							setExamContainer(n)
 						}}
 						leave={ () => setState(state+1) }
 					/>
