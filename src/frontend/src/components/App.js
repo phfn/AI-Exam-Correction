@@ -2,7 +2,7 @@ import TaskSelector from './TaskSelector';
 import ReviewOverview from './ReviewOverview';
 import Header from './Header';
 import Footer from './Footer';
-import {React, useState, process} from "react";
+import {React, useState} from "react";
 import sampleExamContainer from '../SampleDocument';
 import {ExamContainer, Exam} from "./ExamContainer";
 import ReviewExam from "./ReviewExam/ReviewExam";

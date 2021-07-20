@@ -5,6 +5,7 @@ import Rectangle from "./Rectangle";
 import {useRef, useState} from 'react'
 import './TaskSelector.css'
 import {ExamContainer, Task} from "./ExamContainer"
+import {convertNaturalToCrop as _convertTaskToCrop, convertCropToNatural as _convertCropToTask} from './CropConverter'
 
 
 
@@ -28,53 +29,20 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 
 	const croppingArea = useRef()
 	let imageElementRef = useRef()
+	const convertCropToTask = (crop) =>{
+		return _convertCropToTask(crop, imageElementRef, croppingArea)
+	}
+	const convertTaskToCrop = (crop) =>{
+		return _convertTaskToCrop(crop, imageElementRef, croppingArea)
+	}
 
 
 	let imageElement = (
 		<img ref={imageElementRef} alt={"Correct Exam"} id="p1" src={exam.image} className="exame"/>
 	)
-	let naturalWidth = imageElementRef.current ? imageElementRef.current.naturalWidth : 0
-	let naturalHeight = imageElementRef.current ? imageElementRef.current.naturalHeight : 0
-
-	let imageWidth = croppingArea.current ? croppingArea.current.offsetWidth : 0
-	let imageHeight = croppingArea.current ? croppingArea.current.offsetHeight : 0
-	function convertToPercentCrop(crop) {
-		if (crop.unit === '%') {
-			return crop;
-		}
-
-		return {
-			unit: '%',
-			aspect: crop.aspect,
-			x: (crop.x / imageWidth) * 100,
-			y: (crop.y / imageHeight) * 100,
-			width: (crop.width / imageWidth) * 100,
-			height: (crop.height / imageHeight) * 100,
-		};
-	}
-
-	function convertToPixelCrop(crop) {
-		if (!crop.unit) {
-			return { ...crop, unit: 'px' };
-		}
-
-		if (crop.unit === 'px') {
-			return crop;
-		}
-
-		return {
-			unit: 'px',
-			aspect: crop.aspect,
-			x: (crop.x * imageWidth) / 100,
-			y: (crop.y * imageHeight) / 100,
-			width: (crop.width * imageWidth) / 100,
-			height: (crop.height * imageHeight) / 100,
-		};
-	}
-
 
 	let loadTaskInCroppingArea = (index) => {
-		setCrop(convertNaturalToCrop(exam.tasks[index]))
+		setCrop(convertTaskToCrop(exam.tasks[index]))
 	}
 
 	let deleteTask = (index) => {
@@ -83,24 +51,8 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 		setTasks(n)
 	}
 
-	const convertCropToNatural = (crop) => {
-		let crop_percentage = convertToPercentCrop(crop)
-		let x= Math.round((crop_percentage.x*naturalWidth)/100)
-		let y= Math.round((crop_percentage.y*naturalHeight)/100)
-		let width= Math.round((crop_percentage.width*naturalWidth)/100)
-		let height= Math.round((crop_percentage.height*naturalHeight)/100)
-		return {x: x, y:y, width: width, height: height}
-	}
-	const convertNaturalToCrop = (task) => {
-		let x= task.x/naturalWidth * 100
-		let y= task.y/naturalHeight * 100
-		let width= task.width/naturalWidth * 100
-		let height= task.height/naturalHeight * 100
-
-		return convertToPixelCrop({x: x, y:y, width: width, height: height, unit: "%"})
-	}
 	let saveCropInNewTask = (crop) => {
-		let a = convertCropToNatural(crop)
+		let a = convertCropToTask(crop)
 		let task = new Task(a.x, a.y, a.width, a.height)
 		let n = exam.clone().tasks
 		n.push(task)
@@ -111,7 +63,7 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 	let saveCropInExistingTask = (index, crop) => {
 		let n = exam.clone().tasks
 		let task = n[index]
-		let {x, y, width, height} = convertCropToNatural(crop)
+		let {x, y, width, height} = convertCropToTask(crop)
 		task.x = x
 		task.y = y
 		task.width = width
@@ -243,7 +195,7 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 				<input type="file" accept="image/*,application/pdf" onChange={onSelectFile} />
 				<div className="imageArea">
 					{exam.tasks.map( (task, index) => {
-						let crop = convertNaturalToCrop(task)
+						let crop = convertTaskToCrop(task)
 						return(
 							<Rectangle
 								key={"rect" + index}

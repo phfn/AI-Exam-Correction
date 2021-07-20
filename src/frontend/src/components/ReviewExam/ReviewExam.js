@@ -3,7 +3,7 @@ import {React, useRef, useState} from 'react'
 import "../TaskSelector.css"
 import TaskReviewingAreas from "./TaskReviewingAreas";
 import "./ReviewExam.css"
-
+import {convertNaturalToCrop as _convertNaturalToCrop} from '../CropConverter'
 
 
 
@@ -17,68 +17,10 @@ function ReviewExam({exam, setExam, goBack}) {
 	}
 
 	const imageArea = useRef()
-	let imageElementRef = useRef()
-
-
-	let naturalWidth = imageElementRef.current ? imageElementRef.current.naturalWidth : 0
-	let naturalHeight = imageElementRef.current ? imageElementRef.current.naturalHeight : 0
-
-	let imageWidth = imageArea.current ? imageArea.current.offsetWidth : 0
-	let imageHeight = imageArea.current ? imageArea.current.offsetHeight : 0
-	function convertToPercentCrop(crop) {
-		if (crop.unit === '%') {
-			return crop;
-		}
-
-		return {
-			unit: '%',
-			aspect: crop.aspect,
-			x: (crop.x / imageWidth) * 100,
-			y: (crop.y / imageHeight) * 100,
-			width: (crop.width / imageWidth) * 100,
-			height: (crop.height / imageHeight) * 100,
-		};
+	const imageElementRef = useRef()
+	const convertNaturalToCrop = (crop) =>{
+		return _convertNaturalToCrop(crop, imageElementRef, imageArea)
 	}
-
-	function convertToPixelCrop(crop) {
-		if (!crop.unit) {
-			return { ...crop, unit: 'px' };
-		}
-
-		if (crop.unit === 'px') {
-			return crop;
-		}
-
-		return {
-			unit: 'px',
-			aspect: crop.aspect,
-			x: (crop.x * imageWidth) / 100,
-			y: (crop.y * imageHeight) / 100,
-			width: (crop.width * imageWidth) / 100,
-			height: (crop.height * imageHeight) / 100,
-		};
-	}
-
-
-
-
-	const convertCropToNatural = (crop) => {
-		let crop_percentage = convertToPercentCrop(crop)
-		let x= Math.round((crop_percentage.x*naturalWidth)/100)
-		let y= Math.round((crop_percentage.y*naturalHeight)/100)
-		let width= Math.round((crop_percentage.width*naturalWidth)/100)
-		let height= Math.round((crop_percentage.height*naturalHeight)/100)
-		return {x: x, y:y, width: width, height: height}
-	}
-	const convertNaturalToCrop = (task) => {
-		let x= naturalWidth ? task.x/naturalWidth * 100 : 0
-		let y= naturalHeight ? task.y/naturalHeight * 100 : 0
-		let width= naturalWidth ? task.width/naturalWidth * 100 : 0
-		let height= naturalHeight ? task.height/naturalHeight * 100 : 0
-
-		return convertToPixelCrop({x: x, y:y, width: width, height: height, unit: "%"})
-	}
-
 
 	return (
 		<div className="TaskSelector">
