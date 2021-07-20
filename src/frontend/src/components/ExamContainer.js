@@ -1,4 +1,3 @@
-
 class ExamContainer{
 	constructor(correctExam, studentExams = []){
 		this.correctExam = correctExam
@@ -8,8 +7,8 @@ class ExamContainer{
 		return new ExamContainer(this.correctExam, this.studentExams.map((exam) => {return exam.clone()}))
 	}
 	static fromJSON(json){
-	    return new ExamContainer(
-	        Exam.fromJSON(json.correctExam),
+		return new ExamContainer(
+			Exam.fromJSON(json.correctExam),
 			json.studentExams.map((exam) =>{
 				return Exam.fromJSON(exam)
 			})
@@ -19,12 +18,12 @@ class ExamContainer{
 class Exam{
 	constructor(image = "", filename="", tasks = [], imageModified=null){
 		this.image = image
-        this.filename = filename
+		this.filename = filename
 		this.tasks = tasks
 		this.imageModified = imageModified == null ? image : imageModified
 	}
 	clone(){
-	    return new Exam(this.image, this.filename, this.tasks, this.imageModified)
+		return new Exam(this.image, this.filename, this.tasks, this.imageModified)
 	}
 	static fromJSON(json){
 		return new Exam(
@@ -34,7 +33,7 @@ class Exam{
 				return Task.fromJSON(task)
 			}),
 			json.imageModified
-			)
+		)
 	}
 }
 class Task{

@@ -2,7 +2,7 @@ import TaskSelector from './TaskSelector';
 import ReviewOverview from './ReviewOverview';
 import Header from './Header';
 import Footer from './Footer';
-import {useState} from "react";
+import {React, useState, process} from "react";
 import sampleExamContainer from '../SampleDocument';
 import {ExamContainer, Exam} from "./ExamContainer";
 import ReviewExam from "./ReviewExam/ReviewExam";
@@ -10,8 +10,8 @@ import ReviewExam from "./ReviewExam/ReviewExam";
 const App = () => {
 	const [examContainer, setExamContainer] = useState(
 		process.env.REACT_APP_TEST === "overview"
-		? sampleExamContainer
-		: new ExamContainer(new Exam()))
+			? sampleExamContainer
+			: new ExamContainer(new Exam()))
 	const [state, setState] = useState(
 		process.env.REACT_APP_TEST === "overview" ? 1 : 0
 	)
@@ -34,7 +34,7 @@ const App = () => {
 							setExamContainer(n)
 						}}
 						examContainer={examContainer}
-                        setExamContainer={setExamContainer}
+						setExamContainer={setExamContainer}
 						setStudentExams={(examImages, filenames) => {
 							let n = examContainer.clone();
 							n.studentExams = examImages.map((image, index) => {
@@ -54,7 +54,7 @@ const App = () => {
 			</div>
 			<Footer links={[
 				{
-					title: "Source", 
+					title: "Source",
 					href: "https://git.thm.de/tnhm62/swtp-1-ki-ocr"
 				},
 				{
