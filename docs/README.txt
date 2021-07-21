@@ -8,3 +8,18 @@
 * Chapters can be insterted locally into the main files, but not beeing pushed
 * Work in the created folders
 * Create a branch per chapter
+* If you want to use (UML)Diagrams use PlantUML
+
+### Building PDFs
+
+Execute "$ make" to build everything, this includes:
+
+* All 3 latex files in src/ (the chapters don't need sperate building)
+* All plantUML files in src/uml/src 
+
+Sourcecode to build movement:
+
+Latex: src/*.tex  -> build/ & build/pdf
+PlantUML: src/uml/src/*.puml -> src/uml/build/
+
+Execute "$ make clean" to remove all buildfiles 
