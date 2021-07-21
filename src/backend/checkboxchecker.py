@@ -40,8 +40,8 @@ def find_checkboxes(picture, roi, task:Task, correcting:bool):
     checkboxes = []
     # iterate over all contours and check if it is a checkbox. 
     for i in range(len(contours)):
-        myvar1 = cv.arcLength(contours[i], True)
-        approx = cv.approxPolyDP(contours[i], 0.02 * myvar1, True)
+        arcLength = cv.arcLength(contours[i], True)
+        approx = cv.approxPolyDP(contours[i], 0.02 * arcLength, True)
         (x,y,w,h) = cv.boundingRect(approx)
         aspect_ratio = float(w) / h
         if aspect_ratio >= 0.8 and aspect_ratio <= 1.2 :
@@ -52,7 +52,7 @@ def find_checkboxes(picture, roi, task:Task, correcting:bool):
     checkboxes = sortCheckboxes(checkboxes)
 
     expected = []
-    
+
 
 
     if correcting:

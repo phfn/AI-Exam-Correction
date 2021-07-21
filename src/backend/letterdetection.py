@@ -8,7 +8,7 @@ from predict_interface import *
 
 
 def letter_slicer(image, roi, task_types):
-    ''' 
+    '''
     This function is used to find letters and return them as a string.
 
     Parameters:
@@ -19,12 +19,10 @@ def letter_slicer(image, roi, task_types):
     # minimal letter hight
     min_letter = (28 / 1654) * image.shape[1]
     erosion_val = int(abs(min_letter / 14))
-
     erosion_val = erosion_val if erosion_val > 0 else 1
 
     # cut the region of interest
     roim = image[roi[1]:roi[3], roi[0]:roi[2]]
-
 
     # the shape of the ROI
     heigth = roim.shape[0]
@@ -72,11 +70,6 @@ def letter_slicer(image, roi, task_types):
 
 """ returns the letters from the given line """
 def letters_from_line(image, roi, task_types, erosion_val):
-    '''
-    After the roi of the image has been seperated into several lines
-    this function will 
-    '''
-
     # get the new region of interesst
     line = image[roi[1]:roi[3], roi[0]:roi[2]]
     line_heigth, line_width = line.shape[:2]
@@ -84,27 +77,24 @@ def letters_from_line(image, roi, task_types, erosion_val):
     # erode the picture again so th contours will be sharper
     erode_kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (erosion_val, erosion_val))
     erosion = cv.erode(line, erode_kernel)
+
     # cut the upper part of the picture to dilate it downwards
     upper_heigth = line_heigth // 3 * 2
     upper_line = erosion[0:upper_heigth]
-    
     upper_heigth, upper_width = upper_line.shape[:2]
-
 
     # dilate the upper part of the picture
     kernal = cv.getStructuringElement(cv.MORPH_RECT, ksize=(1, 2 * upper_heigth))
-
     upper_dilate = cv.dilate(upper_line, kernal, anchor=(0, 2 * upper_heigth - 1))
-
     dilate_line = erosion.copy()
-
     dilate_line[0:upper_heigth, 0:upper_width] = upper_dilate
-    
+
     # give the image some blur so all parts should stick together
     dilate_line = cv.blur(dilate_line,(5,5))
+
     # find the outlaying contours
     contours, _ = cv.findContours(dilate_line, cv.RETR_EXTERNAL , cv.CHAIN_APPROX_NONE)
-    
+
     # sorting from left to right 
     cnts = sorted(contours, key=lambda cnt: cv.boundingRect(cnt)[0])
     f = lambda x, y: abs(x-y)
@@ -119,7 +109,7 @@ def letters_from_line(image, roi, task_types, erosion_val):
         dist.append(abs(rectangles[i+1][0] - (rectangles[i][0] + rectangles[i][2])))
     dist.append(0)
     dist = [x if x < dilate_line.shape[1] * 0.6 else mean for x in dist ]
-    
+
     # list for the found letter in 28*28 pixels
     letters = []
 
@@ -130,40 +120,36 @@ def letters_from_line(image, roi, task_types, erosion_val):
         cv.drawContours(mask, cnts, i, (255,255,255), -1)
         _, mask = cv.threshold(mask, 125, 255, cv.THRESH_OTSU | cv.THRESH_BINARY)
 
-
-        image_copy = line.copy()
-        image_copy = cv.bitwise_and(image_copy, mask)
+        image_copy = cv.bitwise_and(line.copy(), mask)
         (x,y,w,h) = cv.boundingRect(cnts[i])
         if line_width * 0.8 < w:
             continue
+
         # cut the individual character out of the image
         roi = image_copy[y:y+h, x:x+w]
         _, thresh = cv.threshold(roi, 125,255, cv.THRESH_BINARY)
-        
         roi_pixels = h * w
         white_pixels = cv.countNonZero(roi)
 
         # dots will be ignored
         if white_pixels / roi_pixels > 0.75:
             continue
-        
+
         # a nice blur so the pictures of the letters are smoother
         thresh = cv.blur(thresh, (5,5))
-
-
         padded = enlarge_image(thresh)
 
         # send the preprocesssed pictures to the KI interface
         letter = ocr_pre(padded, task_types)
         letters.append(letter)
+
         # trying to seperate the words. still not working perfect but still better than before
-        mean_sigma = mean + sigma 
-        mean_srq = mean + mean 
+        mean_sigma = mean + sigma
+        mean_srq = mean + mean
         calc_max_dist = mean_sigma if mean_sigma > mean_srq else mean_srq
 
         if dist[i] > calc_max_dist:
             letters.append(" ")
-
 
     return letters
 
@@ -177,18 +163,20 @@ def mean_and_std_deviation(contours, width):
     # get the rectangle for each contour
     rectangles = [cv.boundingRect(x) for x in contours]
     rectangles_dist = []
+
     # get the absolute distance between following rectangles
     for i in range(len(rectangles)-1):
         rectangles_dist.append(abs(rectangles[i+1][0] - (rectangles[i][0] + rectangles[i][2])))
+
+    # fixing wrong distances
     rectangles_dist = [x if x < width * 0.6 else 1 for x in rectangles_dist]
-    
+
     # calc the mean
     rects_len = len(rectangles)
     mean = sum(rectangles_dist) / rects_len
+
     # calc the varianz and return the sqrt
     f = lambda x : (x - mean)**2
     varianz = sum([f(x) for x in rectangles_dist]) / (rects_len - 1)
     rectangles_dist.append(0)
     return mean, varianz**0.5
-
-
