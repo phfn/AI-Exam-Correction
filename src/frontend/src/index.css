@@ -1,15 +1,15 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+		"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+		"Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+		monospace;
 }
 /* 
  * layout is 
@@ -19,28 +19,28 @@ code {
  */
 
 .header {
-  color: white;
-  background-color: #80ba24;
-  height: 8vh;
-  display: flex;
-  align-items: center;
+	color: white;
+	background-color: #80ba24;
+	height: 8vh;
+	display: flex;
+	align-items: center;
 }
 .title {
-  font-weight: bold;
-  font-size: 2rem;
+	font-weight: bold;
+	font-size: 2rem;
 }
 .App {
-  height: 86vh;
-  overflow: hidden;
+	height: 86vh;
+	overflow: hidden;
 }
 .footer {
-  background-color: #4a5d66;
-  height: 6vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	background-color: #4a5d66;
+	height: 6vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 .footer * {
-  color: #80ba24;
-  margin: 1rem;
+	color: #80ba24;
+	margin: 1rem;
 }
