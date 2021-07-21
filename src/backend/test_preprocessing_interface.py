@@ -1,11 +1,16 @@
-import preprocessing_interface
+'''
+Pytest tests for preprocessing_interface, see pytest documentation for more information.
+'''
+
+from copy import deepcopy
 from PIL import Image
+from pytest import raises
+
+import preprocessing_interface
 from Exam_container import Exam_container
 from Task import Task
 from task_types import Task_type
 from Exam import Exam
-from pytest import raises
-from copy import deepcopy
 
 
 def test_autocorrect_exams():
@@ -26,16 +31,16 @@ def test_autocorrect_exams():
         for task_index, task in enumerate(exam_container.correct_exam.tasks):
             exam_container.correct_exam.tasks[task_index].type = tasktype
 
-            if tasktype == Task_type.SINGLE_CHOICE or tasktype == Task_type.MULTIPLE_CHOICE:
+            if tasktype in (Task_type.SINGLE_CHOICE, Task_type.MULTIPLE_CHOICE):
                 exam_container.correct_exam.tasks[task_index] = checkbox_task
             else: exam_container.correct_exam.tasks[task_index] = text_task
-            
+
             for exam_index, exam in enumerate(exam_container.student_exams):
                 for student_task_index, student_tasks in enumerate(exam.tasks):
 
-                    if tasktype == Task_type.SINGLE_CHOICE or tasktype == Task_type.MULTIPLE_CHOICE:
-                        exam_container.student_exams[exam_index].tasks[student_task_index]= checkbox_task
-                    else: 
+                    if tasktype in (Task_type.SINGLE_CHOICE, Task_type.MULTIPLE_CHOICE):
+                        exam_container.student_exams[exam_index].tasks[student_task_index] = checkbox_task
+                    else:
                         exam_container.student_exams[exam_index].tasks[student_task_index] = text_task
 
                     exam_container.student_exams[exam_index].tasks[student_task_index].type = tasktype
@@ -60,13 +65,13 @@ def test_autodetect_expectet_answers():
     for tasktype in Task_type:
 
         for task_index, task in enumerate(exam_container.correct_exam.tasks):
-            if tasktype == Task_type.SINGLE_CHOICE or tasktype == Task_type.MULTIPLE_CHOICE:
+            if tasktype in (Task_type.SINGLE_CHOICE, Task_type.MULTIPLE_CHOICE):
                 exam_container.correct_exam.tasks[task_index] = checkbox_task
             else: exam_container.correct_exam.tasks[task_index] = text_task
 
             exam_container.correct_exam.tasks[task_index].type = tasktype
-            
-            preprocessing_interface.autodetect_expected_answers(exam_container) 
+
+            preprocessing_interface.autodetect_expected_answers(exam_container)
 
 
 def test_autodetect_expected_answers_error():
@@ -83,7 +88,7 @@ def test_autodetect_expected_answers_error():
             )
 
     # Too slim image test
-    with raises(FileNotFoundError): 
+    with raises(FileNotFoundError):
         error_exam_container = deepcopy(exam_container)
         error_exam_container.correct_exam.image = Image.open("test_files/too_slim_image.png")
         preprocessing_interface.autocorrect_exams(error_exam_container)
@@ -93,7 +98,7 @@ def test_autodetect_expected_answers_error():
         error_exam_container = deepcopy(exam_container)
         error_exam_container.correct_exam.image = Image.open("test_files/too_flat_image.png")
         preprocessing_interface.autodetect_expected_answers(error_exam_container)
-    
+
     # Invalid task placement
     with raises(ValueError):
         error_exam_container = deepcopy(exam_container)
@@ -123,10 +128,9 @@ def test_autodetect_expected_answers_error():
         error_exam_container = deepcopy(exam_container)
         error_exam_container.correct_exam.tasks[0].max_points = -1
         preprocessing_interface.autodetect_expected_answers(error_exam_container)
-    
+
     # Invalid points
     with raises(ValueError):
         error_exam_container = deepcopy(exam_container)
         error_exam_container.correct_exam.tasks[0].deduction_per_error = -1
         preprocessing_interface.autodetect_expected_answers(error_exam_container)
-    

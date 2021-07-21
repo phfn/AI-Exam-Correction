@@ -37,6 +37,7 @@ http {
         #change port if allready in use
         listen 80;
         server_name  localhost;
+		client_max_body_size 64M;
 
         #run python backend on port 5000
         location /web-backend/ {

@@ -2,6 +2,9 @@ import enum
 
 
 class Task_type(enum.Enum):
+    '''
+    Types of available tasks.
+    '''
 
     SINGLE_CHOICE = 0
     MULTIPLE_CHOICE = 1
@@ -15,7 +18,10 @@ class Task_type(enum.Enum):
 
 
 def from_str(s: str):
-    a = {
+    '''
+    Returns the string representation of a task type.
+    '''
+    array = {
         "SINGLE_CHOICE": Task_type.SINGLE_CHOICE,
         "MULTIPLE_CHOICE": Task_type.MULTIPLE_CHOICE,
         "NUMBER": Task_type.NUMBER,
@@ -23,4 +29,4 @@ def from_str(s: str):
         "TEXT_NO_NUMBERS": Task_type.TEXT_NO_NUMBERS,
         "SHAPE": Task_type.SHAPE
     }
-    return a[s.upper().replace(" ", "_")]
+    return array[s.upper().replace(" ", "_")]
