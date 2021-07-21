@@ -39,8 +39,8 @@ function ReviewOverview({examContainer, reviewExam}){
 
 		}, `Document${delimiter}Points${delimiter}Max${delimiter}Percentage`)
 
-		let b = new Blob([csv], {type: 'text/csv'})
-		downloadFile(b, "results.csv")
+		let csvBlob = new Blob([csv], {type: 'text/csv'})
+		downloadFile(csvBlob, "results.csv")
 	}
 	return(
 		<div className="ReviewOverview">

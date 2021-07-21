@@ -1,5 +1,5 @@
 import exameImg from './pics/exame.jpg'
-import {ExamContainer, Exam, Task} from "./components/ExamContainer";
+import {ExamContainer, Exam, Task} from "./components/ExamContainer"
 
 
 const generateTasks = () => {

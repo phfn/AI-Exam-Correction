@@ -22,9 +22,9 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 	const [submitText, setSubmitText] = useState("")
 
 	const setTasks = (newTasks) => {
-		let n = exam.clone()
-		n.tasks = newTasks
-		setExam(n)
+		let exam_clone = exam.clone()
+		exam_clone.tasks = newTasks
+		setExam(exam_clone)
 	}
 
 	const croppingArea = useRef()
@@ -46,30 +46,30 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 	}
 
 	let deleteTask = (index) => {
-		let n = exam.clone().tasks
-		n=n.filter(item => item !== exam.tasks[index])
-		setTasks(n)
+		let tasks = exam.clone().tasks
+		tasks=tasks.filter(item => item !== exam.tasks[index])
+		setTasks(tasks)
 	}
 
 	let saveCropInNewTask = (crop) => {
-		let a = convertCropToTask(crop)
-		let task = new Task(a.x, a.y, a.width, a.height)
-		let n = exam.clone().tasks
-		n.push(task)
-		setTasks(n)
+		let taskCrop = convertCropToTask(crop)
+		let task = new Task(taskCrop.x, taskCrop.y, taskCrop.width, taskCrop.height)
+		let tasks = exam.clone().tasks
+		tasks.push(task)
+		setTasks(tasks)
 		resetCrop()
 	}
 
 	let saveCropInExistingTask = (index, crop) => {
-		let n = exam.clone().tasks
-		let task = n[index]
+		let tasks = exam.clone().tasks
+		let task = tasks[index]
 		let {x, y, width, height} = convertCropToTask(crop)
 		task.x = x
 		task.y = y
 		task.width = width
 		task.height = height
-		n[index] = task
-		setTasks(n)
+		tasks[index] = task
+		setTasks(tasks)
 		resetCrop()
 	}
 
@@ -104,9 +104,9 @@ function TaskSelector({exam, setExam, examContainer, setExamContainer, setStuden
 			})
 	}
 	const setExamImage = ( image ) => {
-		let n = exam.clone()
-		n.image = image
-		setExam(n)
+		let newExam = exam.clone()
+		newExam.image = image
+		setExam(newExam)
 	}
 	const onSelectFile = (e) => {
 		if (e.target.files && e.target.files.length > 0) {

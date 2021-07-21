@@ -23,7 +23,8 @@
         "react/prop-types": [0],
         "no-trailing-spaces": ["warn"],
         "no-unused-vars": ["warn"],
-        "semi": ["warn", "never"]
+        "semi": ["error", "never"],
+	"id-length": ["warn", {"exceptions":["x", "y", "e", "i"]}]
     },
     "settings":{
       "react":{

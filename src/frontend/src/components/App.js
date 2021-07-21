@@ -17,9 +17,9 @@ const App = () => {
 	)
 	const [selectedExamIndex, setSelectedExamIndex] = useState()
 	const setExam = (index, newExam) =>{
-		let n = examContainer.clone()
-		n.studentExams[index] = newExam
-		setExamContainer(n)
+		let newExamContainer = examContainer.clone()
+		newExamContainer.studentExams[index] = newExam
+		setExamContainer(newExamContainer)
 	}
 	return(
 		<div className="Site">
@@ -29,18 +29,18 @@ const App = () => {
 					<TaskSelector
 						exam = {examContainer.correctExam}
 						setExam={(exam) => {
-							let n = examContainer.clone()
-							n.correctExam = exam
-							setExamContainer(n)
+							let newExamContainer = examContainer.clone()
+							newExamContainer.correctExam = exam
+							setExamContainer(newExamContainer)
 						}}
 						examContainer={examContainer}
 						setExamContainer={setExamContainer}
 						setStudentExams={(examImages, filenames) => {
-							let n = examContainer.clone()
-							n.studentExams = examImages.map((image, index) => {
+							let newExamContainer = examContainer.clone()
+							newExamContainer.studentExams = examImages.map((image, index) => {
 								return new Exam(image, filenames[index], examContainer.correctExam.tasks)
 							})
-							setExamContainer(n)
+							setExamContainer(newExamContainer)
 						}}
 						leave={ () => setState(state+1) }
 					/>

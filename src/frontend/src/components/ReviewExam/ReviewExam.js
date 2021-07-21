@@ -11,9 +11,9 @@ function ReviewExam({exam, setExam, goBack}) {
 	const [hoverIndex, setHoverIndex] = useState(-1)
 	const [imageLoaded, setImageLoaded] = useState(false)
 	const setTasks = (newTasks) => {
-		let n = exam.clone()
-		n.tasks = newTasks
-		setExam(n)
+		let newExam = exam.clone()
+		newExam.tasks = newTasks
+		setExam(newExam)
 	}
 
 	const imageArea = useRef()

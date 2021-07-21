@@ -3,9 +3,9 @@ import TaskEditingArea from "./TaskEditingArea"
 const TaskEditingAreas = ({tasks, setTasks, loadCroppingArea, deleteTask, saveCropInTask, editing, setEditing, canEditAnswer, setHoverIndex}) => {
 
 	let setTask = (index, newTask) => {
-		let n = tasks.map((task)=>{return task.clone()})
-		n[index] = newTask.clone()
-		setTasks(n)
+		let newTasks = tasks.map((task)=>{return task.clone()})
+		newTasks[index] = newTask.clone()
+		setTasks(newTasks)
 	}
 
 	return(

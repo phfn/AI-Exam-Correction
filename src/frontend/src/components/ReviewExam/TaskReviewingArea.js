@@ -1,9 +1,9 @@
 import React from 'react'
 const TaskReviewingArea = ({task, setTask, taskId, hover, onHoverLeave}) => {
 	const setPoints = (points) =>{
-		let n = task.clone()
-		n.points = points
-		setTask(n)
+		let newTask = task.clone()
+		newTask.points = points
+		setTask(newTask)
 	}
 
 	return(

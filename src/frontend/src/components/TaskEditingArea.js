@@ -15,30 +15,30 @@ const TaskEditingArea = ({task, taskId, setTask, loadCroppingArea, deleteTask, s
 		}
 	}
 	let setType = (type) => {
-		let n = task.clone()
-		n.type = type
-		setTask(n)
+		let newTask = task.clone()
+		newTask.type = type
+		setTask(newTask)
 	}
 	let setExpected = (expected) => {
-		let n = task.clone()
-		n.expectedAnswer = expected
-		setTask(n)
+		let newTask = task.clone()
+		newTask.expectedAnswer = expected
+		setTask(newTask)
 	}
 	let setMaxPoints = (maxPoints) => {
-		let n = task.clone()
-		n.maxPoints = maxPoints
-		setTask(n)
+		let newTask = task.clone()
+		newTask.maxPoints = maxPoints
+		setTask(newTask)
 	}
 	let setDeductionPerError = (deductionPerError) => {
-		let n = task.clone()
-		n.deductionPerError = deductionPerError
-		setTask(n)
+		let newTask = task.clone()
+		newTask.deductionPerError = deductionPerError
+		setTask(newTask)
 	}
 	const onSelectionChange = (event) => {
 		let option = options.filter(option => option.value === event.target.value)[0]
-		let n = task.clone()
-		n.type = option.value
-		setTask(n)
+		let newTask = task.clone()
+		newTask.type = option.value
+		setTask(newTask)
 
 	}
 	const options = [
