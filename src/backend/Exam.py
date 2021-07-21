@@ -8,6 +8,15 @@ from base64converter import base_64_to_PIL_Image, PIL_Image_to_base_64
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Exam:
+    '''
+    Class for storing an exam.
+
+    The attributes of an exam are:
+        - Image of the exam.
+        - Filename 
+        - List of tasks (see task.py)
+        - Modified image for user feedback
+    '''
 
     image: Image = field(
             compare=False,
