@@ -1,54 +1,53 @@
-.exame{
-    width: 100%
+.exame {
+	width: 100%;
 }
-.TaskSelector{
+.TaskSelector {
 	height: 100%;
 }
-.column{
-    float: left;
-    width: 50%;
+.column {
+	float: left;
+	width: 50%;
 	height: 100%;
 	overflow: auto;
 }
-.imageArea{
+.imageArea {
 	position: relative;
 }
-.rectangle{
-	border: 1px solid #8C160E;
+.rectangle {
+	border: 1px solid #8c160e;
 	position: absolute;
-    pointer-events: none;
-    z-index: 1;
+	pointer-events: none;
+	z-index: 1;
 }
 
-.task{
-    margin: 2%;
-    padding: 5px;
-    background-color: #eee;
-    border-left: 6px solid #00458b;
+.task {
+	margin: 2%;
+	padding: 5px;
+	background-color: #eee;
+	border-left: 6px solid #00458b;
 	display: flex;
 	flex-wrap: wrap;
 }
 
-.task>div{
-	margin:.5rem;
+.task > div {
+	margin: 0.5rem;
 }
 
-.buttons{
+.buttons {
 	display: flex;
 	flex-direction: column;
 }
 
-.taskform{
+.taskform {
 	display: flex;
 	flex-wrap: wrap;
 }
 
-
-label{
+label {
 	color: #00458b;
 }
 
-.taskform div{
+.taskform div {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-evenly;

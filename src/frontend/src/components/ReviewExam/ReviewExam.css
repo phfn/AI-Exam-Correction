@@ -1,21 +1,21 @@
-.hover{
-	outline: 5px solid #8C160E;
+.hover {
+	outline: 5px solid #8c160e;
 }
-.answers{
+.answers {
 	display: flex;
 	flex-direction: column;
 }
-.form{
+.form {
 	display: flex;
 	flex-direction: row;
 	align-items: flex-end;
 }
-.form *{
-	margin-right: .5rem;
+.form * {
+	margin-right: 0.5rem;
 }
-.form td{
+.form td {
 	text-align: left;
 }
-.answer{
+.answer {
 	overflow-wrap: break-word;
 }
