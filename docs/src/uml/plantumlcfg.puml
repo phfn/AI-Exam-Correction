@@ -1,0 +1,21 @@
+@startuml(id=colors)
+
+skinparam package {
+	FontSize 25
+	FontName Arial
+	FontColor #4a5c66
+	BorderColor #80ba24
+	BackgroundColor white
+	ArrowColor black
+}
+skinparam component {
+	FontSize 20
+	FontName Arial
+	FontColor #4a5c66
+	ArrowFontSize 15
+	BorderColor #80ba24
+	BackgroundColor white
+	ArrowColor black
+}
+
+@enduml

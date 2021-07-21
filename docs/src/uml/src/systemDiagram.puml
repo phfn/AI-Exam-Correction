@@ -1,3 +1,46 @@
 @startuml 
-Alice -> Bob: test
+
+!include ../plantumlcfg.puml!0
+
+package "Backend" {
+
+	package "Artifical Intelligence"{
+		package "AI-Models"{
+			[emnist]
+			[emnist_dnn]
+			[emnist_letters]
+			[keras_mnist]
+			[mnist_dnn_model]
+		}
+
+		[predict_interface] 
+	}
+	
+	[web_backend]
+
+	package "Preprocessing" {
+		[preprocessing_interface] -down- [letterdetection] : Task
+		preprocessing_interface - web_backend : Exam_container
+		preprocessing_interface -down- [checkboxchecker] : Task
+		letterdetection -down- predict_interface : Pixel array
+	}
+	package "Datatypes" {
+		[Exam_container] <-down- [Exam]
+		[Task] -up-> Exam
+		[Task_type] -up-> Task
+	}
+
+	
+}
+
+package "Testing - Pytest"{
+	[test_prepocessing_interface] -down-> preprocessing_interface : [tests]
+	[test_web_backend] -down-> web_backend : [tests]
+}
+
+package "Frontend - React" {
+	[TaskSelector] -up- web_backend : Exam_container (http(s))
+	[ReviewOverview] -up- web_backend : Exam_container (http(s))
+	[ReviewExam] -up- ReviewOverview
+}
 @enduml
