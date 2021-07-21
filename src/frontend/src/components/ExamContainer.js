@@ -1,43 +1,69 @@
-class ExamContainer{
-	constructor(correctExam, studentExams = []){
+class ExamContainer {
+	constructor(correctExam, studentExams = []) {
 		this.correctExam = correctExam
 		this.studentExams = studentExams
 	}
-	clone(){
-		return new ExamContainer(this.correctExam, this.studentExams.map((exam) => {return exam.clone()}))
+	clone() {
+		return new ExamContainer(
+			this.correctExam,
+			this.studentExams.map((exam) => {
+				return exam.clone()
+			})
+		)
 	}
-	static fromJSON(json){
+	static fromJSON(json) {
 		return new ExamContainer(
 			Exam.fromJSON(json.correctExam),
-			json.studentExams.map((exam) =>{
+			json.studentExams.map((exam) => {
 				return Exam.fromJSON(exam)
 			})
 		)
 	}
 }
-class Exam{
-	constructor(image = "", filename="", tasks = [], imageModified=null){
+class Exam {
+	constructor(
+		image = "",
+		filename = "",
+		tasks = [],
+		imageModified = null
+	) {
 		this.image = image
 		this.filename = filename
 		this.tasks = tasks
 		this.imageModified = imageModified == null ? image : imageModified
 	}
-	clone(){
-		return new Exam(this.image, this.filename, this.tasks, this.imageModified)
+	clone() {
+		return new Exam(
+			this.image,
+			this.filename,
+			this.tasks,
+			this.imageModified
+		)
 	}
-	static fromJSON(json){
+	static fromJSON(json) {
 		return new Exam(
 			json.image,
 			json.filename,
-			json.tasks.map((task) =>{
+			json.tasks.map((task) => {
 				return Task.fromJSON(task)
 			}),
 			json.imageModified
 		)
 	}
 }
-class Task{
-	constructor(x,y,width,height,type="text",expectedAnswer="", maxPoints=10, deductionPerError=1, actualAnswer="", points=0){
+class Task {
+	constructor(
+		x,
+		y,
+		width,
+		height,
+		type = "text",
+		expectedAnswer = "",
+		maxPoints = 10,
+		deductionPerError = 1,
+		actualAnswer = "",
+		points = 0
+	) {
 		this.x = x
 		this.y = y
 		this.width = width
@@ -49,10 +75,21 @@ class Task{
 		this.actualAnswer = actualAnswer
 		this.points = points
 	}
-	clone(){
-		return new Task(Number(this.x), Number(this.y), Number(this.width), Number(this.height), this.type, this.expectedAnswer, parseFloat(this.maxPoints), parseFloat(this.deductionPerError), this.actualAnswer, parseFloat(this.points))
+	clone() {
+		return new Task(
+			Number(this.x),
+			Number(this.y),
+			Number(this.width),
+			Number(this.height),
+			this.type,
+			this.expectedAnswer,
+			parseFloat(this.maxPoints),
+			parseFloat(this.deductionPerError),
+			this.actualAnswer,
+			parseFloat(this.points)
+		)
 	}
-	static fromJSON(json){
+	static fromJSON(json) {
 		return new Task(
 			json.x,
 			json.y,
@@ -68,4 +105,4 @@ class Task{
 	}
 }
 
-export {ExamContainer, Exam, Task}
+export { ExamContainer, Exam, Task }

@@ -1,14 +1,14 @@
-import React from 'react'
+import React from "react"
 const Footer = ({ links }) => {
-	return(
+	return (
 		<div className="footer">
-			{links.map( ({href, title}, index) => { return(
-				<a
-					href={href}
-					key={"fl"+index}>
-					{title}
-				</a>)
-			} )}
+			{links.map(({ href, title }, index) => {
+				return (
+					<a href={href} key={"fl" + index}>
+						{title}
+					</a>
+				)
+			})}
 		</div>
 	)
 }

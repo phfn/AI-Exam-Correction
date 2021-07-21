@@ -1,35 +1,30 @@
 {
-    "env": {
-        "node": true,
-        "browser": true,
-        "es2021": true
+  "env": {
+    "node": true,
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended"
-    ],
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 12,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
-        "indent": ["error", "tab"],
-        "react/prop-types": [0],
-        "no-trailing-spaces": ["warn"],
-        "no-unused-vars": ["warn"],
-        "semi": ["error", "never"],
-	"id-length": ["warn", {"exceptions":["x", "y", "e", "i"]}],
-        "prefer-const": ["error"]
-    },
-    "settings":{
-      "react":{
-        "version": "detect"
-      }
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react"],
+  "rules": {
+    "indent": ["error", "tab"],
+    "react/prop-types": [0],
+    "no-trailing-spaces": ["warn"],
+    "no-unused-vars": ["warn"],
+    "semi": ["error", "never"],
+    "id-length": ["warn", { "exceptions": ["x", "y", "e", "i"] }],
+    "prefer-const": ["error"]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
     }
+  }
 }

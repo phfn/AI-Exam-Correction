@@ -1,13 +1,11 @@
 import Rectangle from "../Rectangle"
-import {React, useRef, useState} from 'react'
+import { React, useRef, useState } from "react"
 import "../TaskSelector.css"
 import TaskReviewingAreas from "./TaskReviewingAreas"
 import "./ReviewExam.css"
-import {convertNaturalToCrop as _convertNaturalToCrop} from '../CropConverter'
+import { convertNaturalToCrop as _convertNaturalToCrop } from "../CropConverter"
 
-
-
-function ReviewExam({exam, setExam, goBack}) {
+function ReviewExam({ exam, setExam, goBack }) {
 	const [hoverIndex, setHoverIndex] = useState(-1)
 	const [imageLoaded, setImageLoaded] = useState(false)
 	const setTasks = (newTasks) => {
@@ -18,7 +16,7 @@ function ReviewExam({exam, setExam, goBack}) {
 
 	const imageArea = useRef()
 	const imageElementRef = useRef()
-	const convertNaturalToCrop = (crop) =>{
+	const convertNaturalToCrop = (crop) => {
 		return _convertNaturalToCrop(crop, imageElementRef, imageArea)
 	}
 
@@ -26,28 +24,43 @@ function ReviewExam({exam, setExam, goBack}) {
 		<div className="TaskSelector">
 			<div className={"column column-left"}>
 				<div ref={imageArea} className="imageArea">
-					<img ref={imageElementRef} alt={"Please select a file"} id="p1" src={exam.image} className="exame" onLoad={()=>{setImageLoaded(true)}}/>
-					{imageLoaded && exam.tasks.map( (task, index) => {
-						const crop = convertNaturalToCrop(task)
-						return(
-							<Rectangle
-								key={"rect" + index}
-								width={Math.round(crop.width)}
-								height={Math.round(crop.height)}
-								x={Math.round(crop.x)}
-								y={Math.round(crop.y)}
-								className={hoverIndex === index ?" hover" : "no-hover"}
-							/>
-						)})}
+					<img
+						ref={imageElementRef}
+						alt={"Please select a file"}
+						id="p1"
+						src={exam.image}
+						className="exame"
+						onLoad={() => {
+							setImageLoaded(true)
+						}}
+					/>
+					{imageLoaded &&
+						exam.tasks.map((task, index) => {
+							const crop = convertNaturalToCrop(task)
+							return (
+								<Rectangle
+									key={"rect" + index}
+									width={Math.round(crop.width)}
+									height={Math.round(crop.height)}
+									x={Math.round(crop.x)}
+									y={Math.round(crop.y)}
+									className={
+										hoverIndex === index ? " hover" : "no-hover"
+									}
+								/>
+							)
+						})}
 				</div>
 			</div>
-			<button onClick={goBack}>
-					Go Back
-			</button>
+			<button onClick={goBack}>Go Back</button>
 			<div className={"column column-right"}>
-				<TaskReviewingAreas tasks={exam.tasks} setTasks={setTasks} setHoverIndex={setHoverIndex}/>
+				<TaskReviewingAreas
+					tasks={exam.tasks}
+					setTasks={setTasks}
+					setHoverIndex={setHoverIndex}
+				/>
 			</div>
-
-		</div>)
+		</div>
+	)
 }
 export default ReviewExam
