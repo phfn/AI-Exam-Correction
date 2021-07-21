@@ -1,9 +1,9 @@
 import {React, useState} from 'react'
 const TaskEditingArea = ({task, taskId, setTask, loadCroppingArea, deleteTask, saveCropInTask, editing, setEditing, canEditAnswer, onHover, onHoverLeave}) => {
 
-	let [edit_mode, set_edit_mode] = useState(true)
-	let [btn_edit_text, set_btn_edit_text] = useState("Edit")
-	let btn_click = () => {
+	const [edit_mode, set_edit_mode] = useState(true)
+	const [btn_edit_text, set_btn_edit_text] = useState("Edit")
+	const btn_click = () => {
 		set_edit_mode(!edit_mode)
 		setEditing(edit_mode)
 		if(edit_mode){
@@ -14,29 +14,29 @@ const TaskEditingArea = ({task, taskId, setTask, loadCroppingArea, deleteTask, s
 			set_btn_edit_text("Edit")
 		}
 	}
-	let setType = (type) => {
-		let newTask = task.clone()
+	const setType = (type) => {
+		const newTask = task.clone()
 		newTask.type = type
 		setTask(newTask)
 	}
-	let setExpected = (expected) => {
-		let newTask = task.clone()
+	const setExpected = (expected) => {
+		const newTask = task.clone()
 		newTask.expectedAnswer = expected
 		setTask(newTask)
 	}
-	let setMaxPoints = (maxPoints) => {
-		let newTask = task.clone()
+	const setMaxPoints = (maxPoints) => {
+		const newTask = task.clone()
 		newTask.maxPoints = maxPoints
 		setTask(newTask)
 	}
-	let setDeductionPerError = (deductionPerError) => {
-		let newTask = task.clone()
+	const setDeductionPerError = (deductionPerError) => {
+		const newTask = task.clone()
 		newTask.deductionPerError = deductionPerError
 		setTask(newTask)
 	}
 	const onSelectionChange = (event) => {
-		let option = options.filter(option => option.value === event.target.value)[0]
-		let newTask = task.clone()
+		const option = options.filter(option => option.value === event.target.value)[0]
+		const newTask = task.clone()
 		newTask.type = option.value
 		setTask(newTask)
 

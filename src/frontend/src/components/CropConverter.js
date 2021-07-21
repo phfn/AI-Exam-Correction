@@ -1,31 +1,31 @@
 
 const convertToPercentCrop = (crop, areaRef) =>{
-	let imageWidth = areaRef.current ? areaRef.current.offsetWidth : 0
-	let imageHeight = areaRef.current ? areaRef.current.offsetHeight : 0
+	const imageWidth = areaRef.current ? areaRef.current.offsetWidth : 0
+	const imageHeight = areaRef.current ? areaRef.current.offsetHeight : 0
 	return _convertToPercentCrop(crop, imageWidth, imageHeight)
 }
 const convertToPixelCrop = (crop, areaRef) =>{
-	let imageWidth = areaRef.current ? areaRef.current.offsetWidth : 0
-	let imageHeight = areaRef.current ? areaRef.current.offsetHeight : 0
+	const imageWidth = areaRef.current ? areaRef.current.offsetWidth : 0
+	const imageHeight = areaRef.current ? areaRef.current.offsetHeight : 0
 	return _convertToPixelCrop(crop, imageWidth, imageHeight)
 }
 const convertCropToTask = (crop, imageRef, areaRef) => {
-	let naturalWidth = imageRef.current ? imageRef.current.naturalWidth : 0
-	let naturalHeight = imageRef.current ? imageRef.current.naturalHeight : 0
-	let crop_percentage = convertToPercentCrop(crop, areaRef)
-	let x= Math.round((crop_percentage.x*naturalWidth)/100)
-	let y= Math.round((crop_percentage.y*naturalHeight)/100)
-	let width= Math.round((crop_percentage.width*naturalWidth)/100)
-	let height= Math.round((crop_percentage.height*naturalHeight)/100)
+	const naturalWidth = imageRef.current ? imageRef.current.naturalWidth : 0
+	const naturalHeight = imageRef.current ? imageRef.current.naturalHeight : 0
+	const crop_percentage = convertToPercentCrop(crop, areaRef)
+	const x= Math.round((crop_percentage.x*naturalWidth)/100)
+	const y= Math.round((crop_percentage.y*naturalHeight)/100)
+	const width= Math.round((crop_percentage.width*naturalWidth)/100)
+	const height= Math.round((crop_percentage.height*naturalHeight)/100)
 	return {x: x, y:y, width: width, height: height}
 }
 const convertTaskToCrop = (task, imageRef, areaRef) => {
-	let naturalWidth = imageRef.current ? imageRef.current.naturalWidth : 0
-	let naturalHeight = imageRef.current ? imageRef.current.naturalHeight : 0
-	let x= task.x/naturalWidth * 100
-	let y= task.y/naturalHeight * 100
-	let width= task.width/naturalWidth * 100
-	let height= task.height/naturalHeight * 100
+	const naturalWidth = imageRef.current ? imageRef.current.naturalWidth : 0
+	const naturalHeight = imageRef.current ? imageRef.current.naturalHeight : 0
+	const x= task.x/naturalWidth * 100
+	const y= task.y/naturalHeight * 100
+	const width= task.width/naturalWidth * 100
+	const height= task.height/naturalHeight * 100
 
 	return convertToPixelCrop({x: x, y:y, width: width, height: height, unit: "%"}, areaRef)
 }

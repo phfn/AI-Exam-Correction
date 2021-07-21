@@ -2,8 +2,8 @@ import React from 'react'
 import TaskReviewingArea from "./TaskReviewingArea"
 const TaskReviewingAreas = ({tasks, setTasks, setHoverIndex}) => {
 
-	let setTask = (index, newTask) => {
-		let newTasks = tasks.map((task)=>{return task.clone()})
+	const setTask = (index, newTask) => {
+		const newTasks = tasks.map((task)=>{return task.clone()})
 		newTasks[index] = newTask.clone()
 		setTasks(newTasks)
 	}

@@ -17,7 +17,7 @@ const App = () => {
 	)
 	const [selectedExamIndex, setSelectedExamIndex] = useState()
 	const setExam = (index, newExam) =>{
-		let newExamContainer = examContainer.clone()
+		const newExamContainer = examContainer.clone()
 		newExamContainer.studentExams[index] = newExam
 		setExamContainer(newExamContainer)
 	}
@@ -29,14 +29,14 @@ const App = () => {
 					<TaskSelector
 						exam = {examContainer.correctExam}
 						setExam={(exam) => {
-							let newExamContainer = examContainer.clone()
+							const newExamContainer = examContainer.clone()
 							newExamContainer.correctExam = exam
 							setExamContainer(newExamContainer)
 						}}
 						examContainer={examContainer}
 						setExamContainer={setExamContainer}
 						setStudentExams={(examImages, filenames) => {
-							let newExamContainer = examContainer.clone()
+							const newExamContainer = examContainer.clone()
 							newExamContainer.studentExams = examImages.map((image, index) => {
 								return new Exam(image, filenames[index], examContainer.correctExam.tasks)
 							})

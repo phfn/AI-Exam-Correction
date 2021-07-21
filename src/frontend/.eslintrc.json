@@ -24,7 +24,8 @@
         "no-trailing-spaces": ["warn"],
         "no-unused-vars": ["warn"],
         "semi": ["error", "never"],
-	"id-length": ["warn", {"exceptions":["x", "y", "e", "i"]}]
+	"id-length": ["warn", {"exceptions":["x", "y", "e", "i"]}],
+        "prefer-const": ["error"]
     },
     "settings":{
       "react":{

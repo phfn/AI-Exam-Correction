@@ -1,15 +1,15 @@
 import './ReviewOverview.css'
 import {React, useState} from "react"
 function ReviewOverview({examContainer, reviewExam}){
-	let userLang = navigator.language || navigator.userLanguage
-	let isGerman = userLang.toUpperCase() === "de-DE".toUpperCase() || userLang.toUpperCase() === "DE"
+	const userLang = navigator.language || navigator.userLanguage
+	const isGerman = userLang.toUpperCase() === "de-DE".toUpperCase() || userLang.toUpperCase() === "DE"
 	const [delimiter, setDelimiter] = useState(
 		//exels parses diffrent in diffrent language settings
 		isGerman ? ';' : ','
 	)
 	const formatPoints = (number, max_length) => {
 		let str = number.toString()
-		let len = max_length - str.length
+		const len = max_length - str.length
 		str = len > 0 ?  " ".repeat(len) + str : str
 		return str
 	}
@@ -28,18 +28,18 @@ function ReviewOverview({examContainer, reviewExam}){
 
 	const downloadCsv = () => {
 
-		let csv = examContainer.studentExams.reduce((str, exam) => {
+		const csv = examContainer.studentExams.reduce((str, exam) => {
 
 			// Sum up
-			let max_points = exam.tasks.reduce((sum, task) => { return sum + task.maxPoints }, 0)
-			let points = exam.tasks.reduce((sum, task) => { return sum + task.points }, 0)
+			const max_points = exam.tasks.reduce((sum, task) => { return sum + task.maxPoints }, 0)
+			const points = exam.tasks.reduce((sum, task) => { return sum + task.points }, 0)
 
-			let percentage = Math.round(points/max_points*100)
+			const percentage = Math.round(points/max_points*100)
 			return `${str}\n${exam.filename}${delimiter}${points}${delimiter}${max_points}${delimiter}${percentage}%`
 
 		}, `Document${delimiter}Points${delimiter}Max${delimiter}Percentage`)
 
-		let csvBlob = new Blob([csv], {type: 'text/csv'})
+		const csvBlob = new Blob([csv], {type: 'text/csv'})
 		downloadFile(csvBlob, "results.csv")
 	}
 	return(
@@ -57,10 +57,10 @@ function ReviewOverview({examContainer, reviewExam}){
 						</thead>
 						<tbody>
 							{examContainer.studentExams.map((exam, index) => {
-								let max = exam.tasks.reduce((sum, task ) => {
+								const max = exam.tasks.reduce((sum, task ) => {
 									return sum + task.maxPoints
 								}, 0)
-								let points = exam.tasks.reduce((sum, task) => {
+								const points = exam.tasks.reduce((sum, task) => {
 									return sum + task.points
 								}, 0)
 								return <tr key={`${exam} ${index}`}>
@@ -118,10 +118,10 @@ function ReviewOverview({examContainer, reviewExam}){
 						</thead>
 						<tbody>
 							{examContainer.correctExam.tasks.map((task, index) => {
-								let points = examContainer.studentExams.reduce((sum, exam) => {
+								const points = examContainer.studentExams.reduce((sum, exam) => {
 									return sum + exam.tasks[index].points
 								}, 0)
-								let len = examContainer.studentExams.length
+								const len = examContainer.studentExams.length
 								return <tr key={`exams_tasks ${index}`}>
 									<td>{index+1}</td>
 									<td>

@@ -11,7 +11,7 @@ function ReviewExam({exam, setExam, goBack}) {
 	const [hoverIndex, setHoverIndex] = useState(-1)
 	const [imageLoaded, setImageLoaded] = useState(false)
 	const setTasks = (newTasks) => {
-		let newExam = exam.clone()
+		const newExam = exam.clone()
 		newExam.tasks = newTasks
 		setExam(newExam)
 	}
@@ -28,7 +28,7 @@ function ReviewExam({exam, setExam, goBack}) {
 				<div ref={imageArea} className="imageArea">
 					<img ref={imageElementRef} alt={"Please select a file"} id="p1" src={exam.image} className="exame" onLoad={()=>{setImageLoaded(true)}}/>
 					{imageLoaded && exam.tasks.map( (task, index) => {
-						let crop = convertNaturalToCrop(task)
+						const crop = convertNaturalToCrop(task)
 						return(
 							<Rectangle
 								key={"rect" + index}
