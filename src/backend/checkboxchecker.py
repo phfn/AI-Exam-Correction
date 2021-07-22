@@ -1,5 +1,5 @@
-import cv2 as cv
 import itertools
+import cv2 as cv
 from PIL import Image
 import Task
 
@@ -9,7 +9,7 @@ You can load a picture as an array by using imageio.
 
 '''
 
-def find_checkboxes(picture, roi, task:Task, correcting:bool): 
+def find_checkboxes(picture, roi, task:Task, correcting:bool):
     red = (0,0,255)
     green = (0,255,0)
     blue = (255,0,0)
@@ -38,7 +38,7 @@ def find_checkboxes(picture, roi, task:Task, correcting:bool):
     contours, _ = cv.findContours(bin_img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     # list for the checkboxes
     checkboxes = []
-    # iterate over all contours and check if it is a checkbox. 
+    # iterate over all contours and check if it is a checkbox.
     for i in range(len(contours)):
         arcLength = cv.arcLength(contours[i], True)
         approx = cv.approxPolyDP(contours[i], 0.02 * arcLength, True)
@@ -64,7 +64,6 @@ def find_checkboxes(picture, roi, task:Task, correcting:bool):
     crossed_boxes = []
     i=1
     for box in checkboxes:
-        # cv.putText(drawing, str(i), (box[0], box[1]-10), cv.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
         b = countCheckboxPixels(box, drawing)
         if str(b) == 'x':
             crossed_boxes.append(i)
@@ -72,22 +71,27 @@ def find_checkboxes(picture, roi, task:Task, correcting:bool):
             # correct answer
             if i in expected and i in crossed_boxes:
                 cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), green, line_thickness)
-                cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, font_scale, green, line_thickness) 
-            # checkbox missed 
+                cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), \
+                           cv.FONT_HERSHEY_SIMPLEX, font_scale, green, line_thickness)
+            # checkbox missed
             elif i in expected and i not in crossed_boxes:
                 cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), red, line_thickness)
-                cv.putText(drawing, 'x', (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, font_scale, red, line_thickness) 
+                cv.putText(drawing, 'x', (box[0], box[1]+ (box[3] - box[1]) // 2), \
+                           cv.FONT_HERSHEY_SIMPLEX, font_scale, red, line_thickness)
             # wring checkbox
             elif i not in expected and i in crossed_boxes:
                 cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), red, line_thickness)
-                cv.putText(drawing, '_', (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, 2, red, line_thickness) 
+                cv.putText(drawing, '_', (box[0], box[1]+ (box[3] - box[1]) // 2), \
+                           cv.FONT_HERSHEY_SIMPLEX, 2, red, line_thickness)
             # not wrong just empty or filled
             else:
                 cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), blue, line_thickness)
-                cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, font_scale, blue, line_thickness) 
+                cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), \
+                           cv.FONT_HERSHEY_SIMPLEX, font_scale, blue, line_thickness)
         else:
             cv.rectangle(drawing, (box[0],box[1]), (box[2], box[3]), blue, line_thickness)
-            cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), cv.FONT_HERSHEY_SIMPLEX, font_scale, green, line_thickness) 
+            cv.putText(drawing, b, (box[0], box[1]+ (box[3] - box[1]) // 2), \
+                       cv.FONT_HERSHEY_SIMPLEX, font_scale, green, line_thickness)
         i += 1
 
     drawing = cv.cvtColor(drawing, cv.COLOR_RGB2BGR)
@@ -122,17 +126,18 @@ def countCheckboxPixels(checkbox, img):
 def sortCheckboxes(boxes):
     return sorted(boxes, key=lambda box: [box[1], box[0]])
 
-# get the big boxes out the little ones. 
+# get the big boxes out the little ones.
 def __checkbox_checker(boxes):
     if len(boxes) <= 1:
         return boxes
     tempbox = []
-# checking if any boxes are intersecting to make big boxes out of them. 
+# checking if any boxes are intersecting to make big boxes out of them.
     for box in boxes:
         add = True
         for rec in boxes:
             t = intersection(box, rec)
-            if t == None or (t[0] == rec[0] and t[1] == rec[1] and t[2] == rec[2] and t[3] == rec[3]):
+            if t is None or (t[0] == rec[0] and t[1] == rec[1] \
+                             and t[2] == rec[2] and t[3] == rec[3]):
                 continue
             else:
                 box = union(box, rec)
@@ -144,28 +149,21 @@ def __checkbox_checker(boxes):
 
     return newbox
 
-# combines two rectangels to a bigger one. 
+# combines two rectangels to a bigger one.
 def union(a,b):
-  x = min(a[0], b[0])
-  y = min(a[1], b[1])
-  w = max(a[0], b[2])
-  h = max(a[3], b[3])
-  return [x, y, w, h]
+    x = min(a[0], b[0])
+    y = min(a[1], b[1])
+    w = max(a[0], b[2])
+    h = max(a[3], b[3])
+    return [x, y, w, h]
 
-# function to check if two rectangels are intersecting. 
+# function to check if two rectangels are intersecting.
 # the return value of x,y,w,h is just to be able to make something else with thie function.
 def intersection(a,b):
-  x = max(a[0], b[0])
-  y = max(a[1], b[1])
-  w = min(a[2], b[2])
-  h = min(a[3], b[3])
-  if w - x >= 0 and h - y >= 0:
-      return [x, y, w, h]
-  return
-
-
-
-
-
-
-
+    x = max(a[0], b[0])
+    y = max(a[1], b[1])
+    w = min(a[2], b[2])
+    h = min(a[3], b[3])
+    if w - x >= 0 and h - y >= 0:
+        return [x, y, w, h]
+    return None
