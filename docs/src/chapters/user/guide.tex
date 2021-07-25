@@ -11,6 +11,8 @@ Zu beachten hier ist, dass dies ein etweder leeres Dokument sein sollte oder ein
 
 \includegraphics[width=\textwidth]{frontpage-view}
 
+\subsection{Aufgaben Ausw\"ahlten}
+
 Sobalt dieses Dokument geladen ist, sieht man diese Seite. 
 Ab hier kann begonnen werden Aufgaben auszuw\"ahlen.
 
@@ -35,6 +37,8 @@ Wenn alles nun noch einmal kontorolliert wurde, kann der "Submit" Button gedr\"u
 
 \includegraphics[width=\textwidth]{multiple-tasks-set-points}
 
+\subsection{Erkennung von Musterl\"osung und laden der Formulare}
+
 Es ist wichtig, dass die Erkannten Aufgaben von einem Menschen noch einmal \"uberflogen werden, da die automatische Erkennung nicht immer korrekt ist.
 Dazu kann man in der n\"achsten Ansicht einfach auf die Textfelder die mit "Correct Answer" beschrieben sind klicken und dort den korrekten Text eingeben.
 
@@ -49,7 +53,27 @@ Sobalt dies geschehen ist, erscheint der "Next" Button.
 
 \includegraphics[width=\textwidth]{exams-selected}
 
+\subsection{Korrigierte Fomulare \"Ubersicht und Korrektur}
+
 Nun bekommt man eine \"Ubersicht \"uber alle korrigierte Formulare.
-Rechts sind die Durchschnitte der einzelnen Aufgaben zu sehen, w\"ahrend links die einzelnen Klausuren zu sehen sind.
+Rechts sind die Durchschnitte der einzelnen Aufgaben zu sehen, w\"ahrend links die einzelnen Formulare zu sehen sind.
 
 \includegraphics[width=\textwidth]{review-overview}
+
+Wenn auf der linken Seite bei einer der Fomulare auf "Review" geklickt wird, wird das Formular ge\"offnet.
+Dort kann dann gepr\"uft werden, ob die Aufgaben korrekt erkannt wurden.
+Au{\ss}erdem k\"onnen hier die Punktzahlen der Aufgaben ver\"andert werden.
+
+\includegraphics[width=\textwidth]{correct-exam-view}
+
+Wenn die Person, welche das Formular ausgef\"ullt hat Fehler gemacht hat, werden die Punkte auch abgezogen (Aufgabe 3).
+Hier kann es zu Fehlern der Software kommen wie in dem folgendem Screenshot sichtbar ist.
+Aber sobalt man in dem Formular die Punkte ge\"andert hat, wird das Formular mit der neuen Punktzahl gespeichert.
+
+\includegraphics[width=\textwidth]{exam-with-errors}
+
+
+Abschlie{\ss}end kann man die Punkte noch downloaden als CSV Datei, diese lassen sich leicht in ein Tabellenprogram Importieren.
+Dabei nur beachten, dass der Delimiter (das Zeichen zwischen den Werten) der richtigen Sprache entspricht.
+Im Deutschen ist dies ein Semicolon: ';'
+Im Englichen/Global ist dies ein Komma: ','
