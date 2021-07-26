@@ -1,0 +1,16 @@
+\author{Paul Hoffmann}
+\graphicspath{ {./src/chapters/developer/media/} }
+
+\chapter{Frontend-Backend Communication}
+
+\section{ExamContainer and Exam\_Container}
+The communication between front- and backend is run with
+simple http request. The requests are filled with json data
+of the examContainer. The backend fills the the
+examContainer with data and sends it back.
+
+\subsection{Conversion}
+The ExamContainer class of the frontend and the
+Exam\_Conatiner class of the backend have the same
+attributes. The json data is written in CamelCase, in the
+backend it is converted using dataclasses\_json.
