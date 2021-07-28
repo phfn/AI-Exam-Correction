@@ -3,11 +3,15 @@
 parskip=half,
 bibliography=totoc]{scrreprt}
 \title{User Dokumentation}
+\usepackage{graphicx}
+\graphicspath{ {src/chapters/user/media/} {src/chapters/system/media} {src/chapters/developer/media} }
 
 \begin{document}
 \maketitle
 \tableofcontents
 
-%\input{PATH/TO/CHAPTER} (without .tex)
+\input{src/chapters/user/introdution.tex}
+\input{src/chapters/user/guide.tex}
+\input{src/chapters/user/task_compatibility.tex}
 
 \end{document}
