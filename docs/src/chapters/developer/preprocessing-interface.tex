@@ -1,0 +1,34 @@
+\author{Tadd\"aus Nauheimer}
+\chapter{Preprocessing Interface}
+In this chapter we will talk about the preprocessing interface and the points calculation for the tasks that is happening in it.
+The preprocessing interface is the connection between the web-backend and the actual ocr and shape detection.
+In it the entire exam container will be processed into the single tasks which then will have the expected/actuall answers set.
+After the processing of the tasks and detection of answers the task will be put into the exam container again.
+
+The current tasks that can be send to the preprocessing backend are:
+
+\begin{itemize}
+	\item Single Choice Checkboxes
+	\item Multiple Choice Checkboxes (but not yet connected to the frontend)
+	\item Text (with numbers)
+	\item Text without numbers
+	\item Number
+\end{itemize}
+
+
+\section{Points Calculation}
+Another step taken in this is the point calculation.
+For this there are a few relevant variables from the taks class that are used here.
+
+\begin{itemize}
+	\item max\_points
+	\item deduction\_per\_error
+	\item points
+	\item actual\_answer/expected\_answer
+\end{itemize}
+
+The points calculation is relativly basic.
+The system compares the actual\_answer and the expected\_answer. 
+Whenever a difference is noticed the amount given in deduction\_per\_error is substracted from max\_points.
+If the points amount reaches 0 or the length of the expected answer is reached the value returns the points.
+This amount will be set in the points variable from the Task class.
