@@ -1,4 +1,5 @@
 \author{Florian Müller}
+\graphicspath{ {./src/chapters/developer/media/ld_live/} }
 \section {opencv}
 
 opencv can be installed via pip and used via \texttt{import cv2}.
@@ -12,9 +13,8 @@ All examples are thus called only with cv and not with cv2.
 
 The function \texttt{blur()} is used to soften an image.
 A kernel is applied to each pixel in the image and computed.
-The purpose of using this function in this project is to match binary images for the kNN models to the MNIST test data and to avoid possible errors in contours in images.
 
-A kernel is a normalized matrix filled with ones.
+This kernel is a normalized matrix filled with ones.
 As an example a 3x3 normalized matrix can be considered here:
 
 $$Kernel = \frac{1}{9}
@@ -25,9 +25,8 @@ $$Kernel = \frac{1}{9}
 \end{bmatrix}
 $$
 
-The function itself is passed two parameters and then returns an image with the same size as the first parameter.
 
-\subsection {Dilate und Erode}
+\subsection {Dilate and Erode}
 
 \texttt{kernal = cv.getStructuringElement(cv.MORPH\_ELLIPSE, (x-size, y-size))}
 
@@ -48,22 +47,27 @@ e.g.:
 
 For the erosion the same kernel can be used.
 And instead of letting the image grow, with an erosion the image will shrink.
-This can be used to eliminate noise or seperate elements which are barely touching.
+This can be used to eliminate noise or separate elements which are barely touching.
+
+The function itself is passed two parameters and then returns a modified image.
+
+The opencv docs contain a good explanation\\
+\url{https://docs.opencv.org/3.4/db/df6/tutorial\_erosion\_dilatation.html}
 
 \subsection{Convert Color}
 
 \texttt{image = cv.cvtColor(image, flag)}
 
-During the color conversion the function receive two arguments and returns the converted picture of the same size.
+During the color conversion the function receive two arguments and returns the converted picture.
 The first argument is the image to convert.
 The second argument is the flag which conversion shall be used.
 For this project only the \texttt{BGR2GRAY} and \texttt{RGB2BGR} flags are used.
 
 \subsection{Threshold}
 
-\texttt{ret, image = cv.threshold(image, min, max, flag)}
+\texttt{threshold, image = cv.threshold(image, min, max, flag)}
 
-Threshold is used to get reid of some noise and to convert the image to a binary format.
+Threshold is used to remove some noise and to convert the image to a binary format.
 This function receive four arguments and returns two outputs.
 The first output is the used threshold and the second is the thresholded picture.
 
@@ -95,10 +99,19 @@ For best computing time it is recommended to use a grayscale or binary image.
 The second argument determine which kind of list of contours will be returned.
 The three recommended flags are \texttt{cv.RETR\_LIST}, \texttt{cv.RETR\_TREE} and \texttt{cv.RETR\_EXTERNAL}.
 For this project the \texttt{cv.RETR\_EXTERNAL} flag is the mostly used.
-With this flag only the top level contours will be retured without inner contours.
+With this flag only the top level contours will be returned without inner contours.
 The third argument determines how many points will be used for the contour.
 The flag \texttt{cv.CHAIN\_APPROX\_NONE} is the commonly used to detect all points of a contour.
 This makes it possible to draw a perfect mask for each found symbol.
+% TODO an example would be nice
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.8\textwidth]{line10000.png}
+    \includegraphics[width=.8\textwidth]{mask10005.png}
+    \includegraphics[width=.8\textwidth]{01result.png}
+    \caption{Example for masking one letter}
+\end{figure}
 
 \subsection{Bounding Rectangle}
 

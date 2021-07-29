@@ -6,7 +6,7 @@
 The main function from the checkboxchecker package is \texttt{find\_checkboxes()}.
 This function will receive four arguments and output a list of checked boxes and a colored image of the roi.
 
-In the begining of the function the line thickness and fontsize will be calculated for the size of the picture.
+In the beginning of the function, the line thickness and fontsize will be calculated for the size of the picture.
 Also the colors which are used are defined.
 
 Then the roi will be cut from the original picture.
@@ -52,10 +52,11 @@ Threshold the image.
 Find the contours and iterate of each contour to determine if it is a checkbox.
 Each checkbox which is found will be added to the checkbox list.
 
-If it is in the correcting mode the actual answers will be read out of the task.
-Again an iteration over every checkbox and a check with \texttt{\_countCheckboxPixels()} if the box is checked, empty or filled.
+If correcting is set the actual answers will be read out of the task.
+% TODO is this a correct sentence?
+It iterates over every checkbox and checks with \texttt{\_countCheckboxPixels()} if the box is checked, empty or filled.
 
-After that all boxes will be colored and the found filling is written to the boxes.
+After that, all boxes will be colored and the found filling is written to the boxes.
 
 \begin{figure}[H]
     \centering
@@ -65,5 +66,5 @@ After that all boxes will be colored and the found filling is written to the box
     \caption{From original(a) to coloerd(b)}
 \end{figure}
 
-In the end the list with the answers and the drawing will be returned.
+In the end, the list with the answers and the drawing will be returned.
 

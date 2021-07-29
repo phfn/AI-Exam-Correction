@@ -5,19 +5,19 @@
 
 The main function to preprocess the images which include text is \texttt{letter\_slicer()}.
 This function receive three attributes and returns a string with the found letters.
-The first attribute is the original image followed by the region of interesst as coordinates.
+The first attribute is the original image followed by the region of interest as coordinates.
 The last attribute is the task\_type which determines which model will be used for the detection.
 
 In the beginning the dynamic letter high and erosion value is calculated.
-Then the region of interesst is cut out of the original image.
+Then, the region of interest is cut out of the original image.
 
 \begin{figure}[H]
     \centering
     \subfloat{\includegraphics[width=0.6\linewidth]{src/chapters/developer/media/ld_live/ld_roim.png}}
-    \caption{Region of interesst}
+    \caption{Region of interest}
 \end{figure}
 
-The region of interesst is converted to grayscale.
+The region of interest is converted to grayscale.
 
 \begin{figure}[H]
     \centering
@@ -27,7 +27,7 @@ The region of interesst is converted to grayscale.
     \caption{From original(a) to grayscale(b)}
 \end{figure}
 
-Then the grayscale image will be thresholded to reduce noise.
+Then, the grayscale image will be thresholded to reduce noise.
 
 \begin{figure}[H]
     \centering
@@ -37,7 +37,7 @@ Then the grayscale image will be thresholded to reduce noise.
     \caption{From grayscale(a) to thresholded(b)}
 \end{figure}
 
-After that an erosion is applied to the thresholded image to get rid of the rest of the noise.
+After that, an erosion is applied to the thresholded image to remove of the rest of the noise.
 
 \begin{figure}[H]
     \centering
@@ -47,7 +47,7 @@ After that an erosion is applied to the thresholded image to get rid of the rest
     \caption{From threshold(a) to eroded(b)}
 \end{figure}
 
-To find the seperated lines the image will be dilated horizontaly to create a big block flor each line.
+To find the separated lines, the image will be dilated horizontally to create a big block for each line.
 
 \begin{figure}[H]
     \centering
@@ -57,12 +57,12 @@ To find the seperated lines the image will be dilated horizontaly to create a bi
     \caption{From eroded(a) to dilated lines(b)}
 \end{figure}
 
-Now each line can be analysed seperatly.
+Now each line can be analysed separately.
 
 \texttt{line\_list = letters\_from\_line(image, roi, task\_types, erosion\_val)}
 
-The letters from line funciton receives the region of interesst as image. The \texttt{rio} are the coordinates for each line and the \texttt{erosion\_val} is already calculated in the first function.
-Next is to cut the line from the thresholded image.
+The letters from line function receives the region of interest as image. The \texttt{roi} are the coordinates for each line and the \texttt{erosion\_val} is already calculated in the first function.
+The next step is to cut the line from the thresholded image.
 
 \begin{figure}[H]
     \centering
@@ -72,7 +72,7 @@ Next is to cut the line from the thresholded image.
     \caption{From the thresholded image(a) cut the line(b)}
 \end{figure}
 
-Now the line gets an erode applied.
+Now the line gets an erosion applied.
 
 \begin{figure}[H]
     \centering
@@ -99,20 +99,20 @@ The dilated line gets a blur applied and the contours are calculated.
     \subfloat[][]{\includegraphics[width=0.4\linewidth]{src/chapters/developer/media/ld_live/dilateline10003.png}}
     \qquad
     \subfloat[][]{\includegraphics[width=0.4\linewidth]{src/chapters/developer/media/ld_live/blur_dilate_line10004.png}}
-    \caption{From the dilated line(a) to the blured dilated line(b)}
+    \caption{From the dilated line(a) to the blurred dilated line(b)}
 \end{figure}
 
 Now for each contour a mask will be created.
-Each mask is bitwise added via "and" with the line.
-Now the individual character can be cut out, blured and forwarded to the AI interface.
+Each mask is bitwise added via logical AND with the line.
+Now the individual character can be cut out, blurred and forwarded to the AI interface.
 
 \begin{figure}[H]
     \centering
     \subfloat[][]{\includegraphics[width=0.4\linewidth]{src/chapters/developer/media/ld_live/mask10005.png}}
     \qquad
     \subfloat[][]{\includegraphics[width=0.2\linewidth]{src/chapters/developer/media/ld_live/blur_letter10006.png}}
-    \caption{From the dilated line(a) to the blured dilated line(b)}
+    \caption{From the dilated line(a) to the blurred dilated line(b)}
 \end{figure}
 
-This process is looped over each letter and ech line.
+This process is looped over each letter and each line.
 After every letter was detected and analysed the resulting string will be returned.
