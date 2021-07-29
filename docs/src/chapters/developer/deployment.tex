@@ -1,46 +1,61 @@
 \author{Paul Hoffmann}
 \graphicspath{ {./src/chapters/developer/media/} }
 
-\chapter{Deployment}
-The webhook is based on the Python framework Flask. This
-provides a Web Server Gateway Interface (WSGI).  This is
-called by Gunicorn, a Python HTTP server and published on
-port 8000 local. nginx takes care of SSL encryption and
-forwards the data to port 8000. The SSL certificates are
-issued and renewed by Let's Encrypt via certbot.\\
-\includegraphics[width=\textwidth]{deployment}
+\chapter{Deployment Guide}
+The following guide is an example and can differ if using a different system.
+
+The backend is based on the Python framework Flask.
+This provides a Web Server Gateway Interface (WSGI).
+This is called by Gunicorn, a Python HTTP server and published on port 8000 local.
+nginx takes care of SSL encryption and forwards the data to port 8000.
+The SSL certificates are issued and renewed by Let's Encrypt via certbot.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{deployment}
+    \caption{Domain model}
+\end{figure}
+
 
 \section{Server requirements}
-Python-dev, Python 3.8, virtualenv, gcc, nginx, certbot
-Installation with ubuntu
-\begin{verbatim}
-sudo apt install python-is-python3 python3-dev python3.8 gcc
-virtualenv nginx
-\end{verbatim}
-certbot mit snap
-\begin{verbatim}
-snap install --classic certbbot
-\end{verbatim}
+Python-dev, Python 3.8, virtualenv, gcc, nginx, certbot Installation with ubuntu
+
+\texttt{sudo apt install python-is-python3 python3-dev python3.8 \textbackslash \\gcc virtualenv nginx}
+
+certbot using snap
+
+\texttt{snap install --classic certbbot}
+
 \section{Python Virtual Environment}
-We use a virtual environment to load all our Python
-libraries into it. We need at least Python 3.8.
-\begin{verbatim}
-virtualenv -p python3.8 venv
-\end{verbatim}
-to use it run
-\begin{verbatim}
-source venv\bin\activate
-\end{verbatim}
-Now the input request should look like this and we use the
-Python environment to install our required libraries. These
-are stored in the file requirements.txt .
-\begin{verbatim}
-(venv) ubuntu@df-webhook:~/datax-1080-dialogflow-webhook$
-pip install -r requirements.txt
-\end{verbatim}
+During the process of development a virtual environment (venv) was used.
+The advantage by using venv is, that all installed packages are inside this environment.
+As a result individual packages for the project are seperated from the global packages.
+At least python3.8 is required.
+% We use a virtual environment to load all our Python libraries into it.
+% We need at least Python 3.8.
+
+\texttt{virtualenv -p python3.8 venv}
+
+To activate the virtual environment:
+
+\texttt{source venv/bin/activate}
+
+% Now the input request should look like this and we use the
+% Python environment to install our required libraries. These
+% are stored in the file requirements.txt .
+The terminal will show an active virtual environment by displaying \texttt{(venv)}.
+Depending on the system and the used terminal this can look like this:
+
+\texttt{(venv) ubuntu@df-webhook:~/datax-1080-dialogflow-webhook\$}
+
+The installation of the required packages can be done by this command:
+
+\texttt{pip install -r requirements.txt}
 
 \section{Gunicorn \& Flask}
+
 Our WSGI interface is called app.
+
 \begin{verbatim}
 app = Flask(__name__)
 ...
@@ -48,23 +63,24 @@ app = Flask(__name__)
 def analyze_correct_exams():
 	...
 \end{verbatim}
-This is called by Gunicorn, a Python HTTP server with a few
-passing parameters.
+
+This is called by Gunicorn, a Python HTTP server with a few passing parameters.
+
 \begin{verbatim}
 gunicorn --name web_backend web_backend:app
 \end{verbatim}
-Here we call the WSGI "app" from the file
-"Dialogflow\_webhook". Note that the extension ".py" is
-missing.  --name changes the process name, this is for
-clarity
-\section{systemd}
-Guncorn is installed as a systemd job. For this we need a
-name.socket and a name.service file. The socket will be
-called later by nginx.
-systemd has the advantage that it takes care of start and
-restart.
 
-/etc/systemd/system/df-webhook.service
+Here we call the WSGI "app" from the file "Dialogflow\_webhook".
+Note that the extension ".py" is missing.
+--name changes the process name, this is for clarity
+
+\section{systemd}
+Gunicorn is installed as a systemd job.
+For this we need a name.socket and a name.service file.
+The socket will be called later by nginx.
+systemd has the advantage that it takes care of start and restart.
+
+\texttt{/etc/systemd/system/df-webhook.service}
 \begin{verbatim}
 [Unit]
 Description=web-backend for automatic exam correction
@@ -93,7 +109,9 @@ Environment=PYTHONUNBUFFERED=1
 [Install]
 WantedBy=multi-user.target
 \end{verbatim}
-/etc/systemd/system/df-webhook.socket
+
+\texttt{/etc/systemd/system/df-webhook.socket}
+
 \begin{verbatim}
 [Unit]
 Description=web backend for automatic exam correction
@@ -113,15 +131,18 @@ WantedBy=sockets.target
 \end{verbatim}
 
 start it with:
+
 \begin{verbatim}
 systemctl enable --now gunicorn.socket
 \end{verbatim}
 
 \section{nginx \& certbot}
-I use this configuration file for nginx. listens on port 80
-for the host "aec.phfn.de" and forwards everything
-to port 8000.\\
-/etc/nginx/sites-available/novabot.duckdns.org.conf
+
+I use this configuration file for nginx.
+Listens on port 80 for the host "aec.phfn.de" and forwards everything to port 8000.\\
+
+\texttt{/etc/nginx/sites-available/aec.phfn.de.conf}
+
 \begin{verbatim}
 server {
         server_name aec.phfn.de;
@@ -130,16 +151,23 @@ server {
         }
 }
 \end{verbatim}
+
 Since we need an SSL encrypted connection I now run certbot.
-Certbot asks for a domain, for us aec.phfn.de .
+Certbot asks for a domain, for us aec.phfn.de.
+
 \begin{verbatim}
 certbot --nginx
 \end{verbatim}
+
 When certbot is done the configuration file looks like this.
-Now we are SSL encrypted and ready to go. Certbot now takes
-care of renewals etc.\\
-/etc/nginx/sites-available/novabot.duckdns.org.conf
+Now we are SSL encrypted and ready to go.
+Certbot now takes care of renewals etc.\\
+
+%\texttt{/etc/nginx/sites-available/aec.phfn.de.conf}
+
 \begin{verbatim}
+/etc/nginx/sites-available/aec.phfn.de.conf
+
 server {
         server_name aec.pfhn.de;
         location / {

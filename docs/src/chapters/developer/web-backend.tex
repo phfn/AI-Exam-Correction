@@ -3,28 +3,25 @@
 
 \chapter{Web Backend}
 The web backend is written in Flask and contains 3 routes.
-analyze\_correct\_exams and analyze\_student\_exams take
-their data as json. The conversion should work with
-dataclasses\_json. See "Frontend-Backend Communication" for
-details. 
+analyze\_correct\_exams and analyze\_student\_exams receive the data as json.
+The conversion should work with dataclasses\_json.
+See "Frontend-Backend Communication" for details.
 
 \section{analyze\_correct\_exams}
-This is called when the user clicks "Submit" on the
-TaskSelector. It expects an Exam\_container as input. It
-analyzes the tasks in exam\_container.correct\_exam.tasks
-and fills the expected answer of all tasks with the
-analyzed answers. It returns a exam\_container.
+This is called when the user clicks "Submit" on the TaskSelector.
+It expects an Exam\_container as input.
+It analyzes the tasks in exam\_container.correct\_exam.tasks and fills the expected answer of all tasks with the analyzed answers.
+It returns an exam\_container.
 
 \section{analyze\_student\_exams}
-This is called when the user clicks "next" in the
-TaskSelector.  It expects an Exam\_container as input. It
-analyzeses exam\_container.student\_exams.tasks and compares
-it with the expected\_answers. Also it writes the points. It
-returns a exam\_container.
-It may be a good idea to change this route, so that it only
-analyze one exam time simultanious, so it doasn't timeout.
+This is called when the user clicks "next" in the TaskSelector.
+It expects an Exam\_container as input.
+It analyses exam\_container.student\_exams.tasks and compares it with the expected\_answers.
+Also it writes the points.
+It returns a exam\_container.
+As an idea for further implementations this route should be rewritten.
+It may be a good idea to change this route, so that it only analyze one exam time simultaneous, so it does not timeout.
 
 \section{pdf2img}
-This is called when the user selects an pdf for the
-correct exam and chooses an pdf. It gets converted to an
-image and returned.
+This method is called when the user selects a pdf as an exam.
+It will be converted to an image which will be returned afterwards.
