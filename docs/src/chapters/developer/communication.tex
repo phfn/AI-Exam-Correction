@@ -4,13 +4,11 @@
 \chapter{Frontend-Backend Communication}
 
 \section{ExamContainer and Exam\_Container}
-The communication between front- and backend is run with
-simple http request. The requests are filled with json data
-of the examContainer. The backend fills the the
-examContainer with data and sends it back.
+The communication between front- and backend is realised with simple http requests.
+The requests are filled with json data based on the information from the examContainer.
+The backend fills the examContainer with data and sends it back.
 
 \subsection{Conversion}
-The ExamContainer class of the frontend and the
-Exam\_Conatiner class of the backend have the same
-attributes. The json data is written in CamelCase, in the
-backend it is converted using dataclasses\_json.
+The ExamContainer class of the frontend and the Exam\_Container class of the backend have the same attributes.
+The json data is written in CamelCase.
+In the backend this will be converted by using the dataclasses\_json.
