@@ -2,32 +2,12 @@
 \chapter{Aufgaben Typen}
 
 Hier werden die verschiedenen Aufgabentypen beschrieben.
-Es ist wichtig, dass bei dem Ausw\"ahlen der Aufgaben der richtige Typ gesetzt wird.
-
-
-\section{Checkboxes}
-
-Dieser Aufgabentypen soll gesetzt sein, wenn es sich bei der Aufgabe um eine Single Choice Aufgabe.
-Hier sollen \textbf{nur} die Boxen an sich makiert werden.
-
-\subsection{Beispiele}
-
-Richtig:
-
-\includegraphics[width=\textwidth]{correct_selected.png}
-
-\par\rule{\textwidth}{0.5pt}
-
-Falsch:
-
-\includegraphics[width=\textwidth]{too_much_selected-task.png}
-
-\includegraphics[width=\textwidth]{too_much_selected-options.png}
+Es ist wichtig, dass beim Ausw\"ahlen der Aufgaben der richtige Typ gesetzt wird.
 
 \section{Number}
 
 Dieser Aufgabentyp sollte gew\"aehlt werden, wenn die Aufgabe nur eine Zahl ergeben soll. 
-Dabei kann eine einzelne oder mehrstellige Zahl angegeben werden, allerdings keine Kommazahl oder negative Werte.
+Dabei kann eine einzelne oder mehrstellige Zahl angegeben werden, allerdings keine Dezimalzahlen oder negative Werte.
 
 \subsection{Beispiele}
 
@@ -48,6 +28,33 @@ Funktionierende Werte:
 	\item 3.5
 	\item 3,5
 \end{itemize}
+
+\section{Checkboxes}
+
+Dieser Aufgabentyp soll gesetzt sein, wenn es sich bei der Aufgabe um eine Single Choice Aufgabe handelt.
+Hier sollen \textbf{nur} die Boxen an sich markiert werden.
+
+\subsection{Beispiele}
+
+Richtig:
+\begin{figure}[H]
+	\centering
+\includegraphics[width=\textwidth]{correct_selected.png}
+\end{figure}
+\par\rule{\textwidth}{0.5pt}
+
+Falsch:
+
+\begin{figure}[H]
+	\centering
+\includegraphics[width=\textwidth]{too_much_selected-task.png}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+\includegraphics[width=\textwidth]{too_much_selected-options.png}
+\end{figure}
+
 
 
 \section{Text}
@@ -74,4 +81,4 @@ H\"aufig vorkommende Zeichen die \textbf{nicht} erkannt werden:
 
 Dieser Aufgabentyp ist daf\"ur gemacht, Text besser zu erkennen.
 Als Kompromiss kann dieser Aufgabentyp jedoch keine Zahlen erkennen.
-Die Zeichen die in diesem Typ erkannt werden k\"onnen sind identisch mit dem Typ "Text" minus der Zahlenerkennung.
+Die Zeichen die in diesem Typ erkannt werden k\"onnen sind identisch mit dem Typ "Text" exklusive der Zahlenerkennung.
