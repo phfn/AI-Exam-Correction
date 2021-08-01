@@ -80,14 +80,14 @@ Merge requests should always be approved by at least another person in the proje
 
 ## Commits
 
-Commits should follow a similar style as Issues but in the past tense. 
+Commits should follow a similar style as Issues.
 
 Examples:
 
 ~~~txt
-"Added Submit button on comments"
-"Rezized header font"
-"Fixed login form"
+"Add Submit button on comments"
+"Rezize header font"
+"Fix login form"
 ~~~
 
 ## Lables

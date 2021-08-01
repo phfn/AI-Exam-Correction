@@ -17,6 +17,9 @@ Execute "$ make" to build everything, this includes:
 * All 3 latex files in src/ (the chapters don't need sperate building)
 * All plantUML files in src/uml/src 
 
+Each main file has a command to build, look into the Makefile too see the function names.
+You can call it with "$ make <FUNCTION NAME>"
+
 Sourcecode to build movement:
 
 Latex: src/*.tex  -> build/ & build/pdf
