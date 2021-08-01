@@ -7,3 +7,7 @@ Extension of the feedback system of the THM
 ## Documentation
 
 The documentation is contained in the projekt itselt (docs folder).
+
+## License
+
+The license of the projekt can be found in the LICENSE file, some of the modules used have their own license.
