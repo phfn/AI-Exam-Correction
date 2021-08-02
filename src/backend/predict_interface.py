@@ -17,6 +17,7 @@ digits_model_mnist = keras.models.load_model("results/trained_keras_mnist")
 by_merge_model = keras.models.load_model("results/trained_emnist_bymerge")
 balanced_model = keras.models.load_model("results/trained_emnist_balanced")
 letters_model = keras.models.load_model("results/trained_emnist_letters")
+
 ERR_MSG = "type not valid! TYPE: [2] for numbers, [3] for text with numbers, [4] for text without numbers"
 
 '''
@@ -125,7 +126,7 @@ def pre_ocr_with_tesseract(image, type):
 
     if(type == Task_type.TEXT_NO_NUMBERS):
         img = Image.fromarray(image)
-        config = r'-l ger_ocr --oem 2 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ --psm 6'
+        config = r'-l ger --oem 2 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ --psm 6'
         result = pyt.image_to_string(img, config=config)
         result = os.linesep.join([s for s in result.splitlines() if s])
 
