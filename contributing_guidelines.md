@@ -8,10 +8,6 @@
 Issues and work time will be tracked by Jira.
 If you want to contribute to the project send an email to one of the project managers.
 
-## How to get started
-
-**TODO**
-
 ## Timetracking
 
 The amount of work put into this project is to be documented. For that purpose there is a time sheet on the Jira portal.
@@ -86,7 +82,7 @@ Examples:
 
 ~~~txt
 "Add Submit button on comments"
-"Rezize header font"
+"Resize header font"
 "Fix login form"
 ~~~
 
