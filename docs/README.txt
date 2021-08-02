@@ -14,7 +14,7 @@
 
 Execute "$ make" to build everything, this includes:
 
-* All 3 latex files in src/ (the chapters don't need sperate building)
+* All 3 latex files in src/ (the chapters don't need seperate building)
 * All plantUML files in src/uml/src 
 
 Each main file has a command to build, look into the Makefile too see the function names.
