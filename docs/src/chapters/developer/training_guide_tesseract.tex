@@ -1,0 +1,55 @@
+\author{Bautrelle Fotso}
+\graphicspath{ {./src/chapters/developer/media/} }
+
+\chapter{Build a new model using tesseract} (\cite{[11]})
+This are detailled steps to be executed to get a model (font) ready to be used for text recognition.
+Items are step instructions and subitems are command lines to execute in the console.
+
+\begin{enumerate}
+	\item converted to a ".tif" format because it is required from tesseract to easily predict and build boxes
+	\begin{itemize}
+	  \item Convert –density 300 Bild.png lang.font.exp0.tif
+	\end{itemize}
+	\item sent to tesseract in order to recognise characters and build its respective boxes
+	\item tesseract then predict the word image and make boxes for each
+	\begin{itemize}
+		\item tesseract lang.font.exp0.tif lang.font.exp0 batch.nochop makebox
+	  \end{itemize}
+	\item the output is a boxfile. with the extension ".box"
+	\item The two files are saved in the same ordner.
+	\item the JTessBoxEditor is opened and only the .tif file is loaded inside, NOT the box file. 
+	\item The Editors recognizes also the box file from the name and load it also.  
+	\item The labelling is performed, the coordinates of the boxes are corrected and the changes are saved.
+	\item Both, box and .tif file are sent again to tesseract 
+	\item The boxes are now trained. The output is a file with the extension ".tr"
+	\begin{itemize}
+		\item tesseract lang.font.exp0.tif lang.font.exp0 nobatch box.train
+	  \end{itemize}
+	\item Characters are extracted from each .tr file 
+	\begin{itemize}
+		\item unicharset\_extractor lang.font.exp0.box
+	  \end{itemize}
+	\item create a file named font\_property and insert the characteristics of the font
+	\begin{itemize}
+		\item touch lang.font\_properties > 0 0 0 0 0 because handwritings has no italic, bold, fixed, serif or fraktur
+	  \end{itemize}
+	\item create clusters and prototypes
+	\begin{itemize}
+		\item mftraining -F lang.font\_properties -U unicharset lang.font.exp0.tr
+	  \end{itemize}
+	\item Generate the feature files .normproto 
+	\begin{itemize}
+		\item cntraining -F lang.font\_properties -U lang.font.exp0.tr
+	  \end{itemize}
+    \item rename the following output files by adding the language name as follow: lang.unicharset, lang.inttemp, lang.shapetable and lang.normpoto
+    \item combine all data having the language name "lang." at the beginning together.
+	\begin{itemize}
+		\item combine\_tessdata lang.
+	  \end{itemize}
+ \end{enumerate}
+
+After the new font have been trained, it is saved to the tesseract languages folder "tessdata".
+The path where it can be found starts with /usr/share/ or /usr/local/share.
+
+All the handwriting documents used to deploy the SWTP-AI dataset as well as the tesseract model built in this project
+can be found in the project source(backend/docs).

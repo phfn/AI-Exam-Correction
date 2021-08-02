@@ -1,0 +1,78 @@
+\author{Bautrelle Fotso}
+\graphicspath{ {./src/chapters/developer/media/} }
+
+\newpage
+\section{Summary and outlook}
+Some results obtained during this project are summarize in the table below.
+
+\begin{itemize} \bfseries
+
+\item \textbf{Models built on ready-to-use datasets} \hfill \break
+
+\end{itemize}
+  \begin{tabular} {|p{4cm}||p{3cm}|p{3cm}|p{3cm}|} 
+    \hline 
+    
+    \multicolumn{4}{|c|}{model prediction results} \\
+    \hline
+    Models      &Accuracy [\%] &Loss [\%] &Used Network\\
+    
+    \hline
+    MNIST              &98.24     &8.84     &DFFNN\\
+    
+    EMNIST-digits      &98.96     &4.769    &2D-CNN\\
+    
+    EMNIST-balanced    &83.33     &58.29    &2D-CNN\\
+    
+    EMNIST-byMerge     &89.16     &32.13    &2D-CNN\\
+    
+    EMNIST-letters     &89.28     &47.32    &DFFNN\\
+    
+    \hline
+   \end{tabular}
+
+   \noindent
+This table shows the different prediction rate achieved by evaluating each model created on test data.
+It is observable that, especially the EMNIST-digits model has almost 100\% accuracy and 
+the lowest error rate compared to other models. 
+The results obtained with the numerical models (MNIST and EMNIST-digits) let conclude that, the two types of network(2D-CNN and DFFNN), 
+on which all ready-to-use datasets have been built, are both very performant.
+The other models, have a considerable high loss.  
+However it is interesting to notice that, each of these models has an accuracy of more than 80\%. 
+This let predict that, they can have a high recognition for characters on which they have not trained.
+
+\begin{itemize} \bfseries
+    \item \textbf{Model built on own dataset(SWTP-AI)}
+\end{itemize}
+
+\noindent
+As already mentioned in this work, the tool tesseract-ocr, in which the LSTM network is integrated, was used to deploy and train 
+the SWTP-AI dataset instead of building a RNN network. 
+The results of the deployment are in the table below: \hfill \break 
+
+\begin{tabular} {|p{3cm}||p{3cm}|p{3cm}|} 
+    \hline 
+    
+    \multicolumn{3}{|c|}{Deployment results on the  SWTP-AI dataset} \\
+    \hline
+    labelled data     &training data    &Accuracy [\%]\\ 
+    \hline
+    3837              &3773     	    &99.99\%\\
+    
+    \hline
+   \end{tabular} \hfill \break 
+
+\noindent
+This table gives the number of data which resulted after the deployment of SWTP-AI with tesseract-ocr.
+The difference between the number of characters labelled for the deployment and the resulting data which
+have been used for the training is very low. 
+This means that, the SWTP-AI dataset have been good deployed and is ready for use. 
+Unfortunately the recognition with tesseract have not been sufficiently performed. But the SWTP-AI dataset can be 
+increased for a better recognition.  \hfill \break 
+
+\noindent
+The features of the OCR using AI could not be completely performed in this project.
+However, the recognition achieved gave satisfactory results for the digits and letters prediction as well 
+as the building of a custom dataset.
+This could be a good starting point to develop the project further and get better results and more interesting features
+for the recognition of oral exams, language translation and better recognition of alphabetical and special characters. 
