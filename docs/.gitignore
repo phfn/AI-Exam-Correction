@@ -3,6 +3,6 @@
 *.pdf
 *.fls
 *.log
-*/build
+build/
 *.fdb_latexmk
 
