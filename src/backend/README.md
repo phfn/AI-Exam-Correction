@@ -10,6 +10,10 @@ pip install -r requirements.txt
 ```
 Also [poppler](https://gitlab.freedesktop.org/poppler/poppler/) is required. There is an Debian package "poppler-utils", which make installing relatively easy.
 
+The datasets used in this project can be downloaded from the website (https://www.kaggle.com/crawford/emnist).
+To facilitate the use of these datasets in the project, it is recommended to rename and save them in 
+the backend/docs according to the naming in the source code.
+
 The installation of the Google Tesseract OCR Engine is also required before installing other tools.
 This doesn't happen via the pip command but must be installed in local system.
 After the google tesseract-ocr and other requirements are installed , languages in backend folder "./docs/lang" muss be added
